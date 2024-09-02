@@ -1,0 +1,199 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canal Sugar</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Top Bar */
+        .top-bar {
+            width: calc(100% - 250px);
+            height: 50px;
+            background-color: #f4f4f4;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 220px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #f4f4f4;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            transition: all 0.3s;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            color: #333;
+            text-decoration: solid;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s; 
+        }
+
+        .sidebar a:hover {
+            background-color: #165d0a; 
+            color: #ffffff;
+        }
+
+        /* Dropdown */
+        .dropdown-btn {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f4f4f4;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 16px;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s; 
+        }
+
+        .dropdown-btn:hover {
+            background-color: #165d0a; 
+            color: #ffffff;
+        }
+
+        .dropdown-container {
+            display: none;
+            background-color: #f4f4f4;
+            padding-left: 20px;
+        }
+
+        .dropdown-container a {
+            padding: 8px 10px;
+            display: block;
+            color: #333;
+            text-decoration: solid;
+        }
+
+        .dropdown-container a:hover {
+            background-color: #165d0a; 
+            color: #ffffff;
+        }
+
+        /* Responsive Sidebar */
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                left: 0;
+                top: 50px;
+            }
+            .top-bar {
+                width: 100%;
+                left: 0;
+            }
+            .sidebar a {float: left;}
+            .container {
+                margin-left: 0;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .top-bar .menu-btn {
+                display: block;
+                position: absolute;
+                left: 20px;
+                top: 10px;
+            }
+        }
+
+        .container {
+            margin-left: 270px;
+            padding-top: 60px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <!-- <h2 style="text-align: center; padding: 10px;">Canal Sugar</h2>
+        <span class="menu-btn bx bx-menu" style="font-size: 24px; cursor: pointer;"></span> -->
+    </div>
+
+    <div class="sidebar">
+        <h2>CANAL SUGAR</h2>
+        <a th:href="@{/admin/home}">HOME</a>
+        <a th:href="@{/admin/stock}">STOCK</a>
+        
+        <button class="dropdown-btn"> MANAGE RESOURCES 
+            <i class="bx bx-chevron-down"></i>
+        </button>
+        <div class="dropdown-container">
+            <button class="dropdown-btn">MANAGE ASSETS 
+                <i class="bx bx-chevron-down"></i>
+            </button>       
+            <div class="dropdown-container">
+                <a th:href="@{/asset/addAsset}">ADD ASSET</a>
+                <a th:href="@{/asset/viewassets}">VIEW ASSET</a>
+                <a th:href="@{/asset/viewscreens}">ASSIGN ASSETS</a>
+                <a th:href="@{/asset/viewassignedscreens}">VIEW ASSIGNED ASSETS</a>
+            </div>
+            <button class="dropdown-btn">MANAGE ASSET TYPES
+                <i class="bx bx-chevron-down"></i>
+            </button>
+            <div class="dropdown-container">
+                <a th:href="@{/asset/addAssetType}">ADD ASSET TYPE</a>
+                <a th:href="@{/asset/viewassettypes}">VIEW ASSET TYPES</a>
+            </div>
+        </div>
+
+        <button class="dropdown-btn"> MANAGE USERS 
+            <i class="bx bx-chevron-down"></i>
+        </button>
+        <div class="dropdown-container">
+            <a th:href="@{/admin/adduser}">ADD USER</a>
+            <a th:href="@{/admin/viewUsers}">VIEW USERS</a>
+            <button class="dropdown-btn">MANAGE ADMINS
+                <i class="bx bx-chevron-down"></i>
+            </button>
+            <div class="dropdown-container">
+                <a th:href="@{/admin/addadmin}">ADD ADMIN</a>
+                <a th:href="@{/admin/viewAdmins}">VIEW ADMINS</a>
+            </div>
+        </div>
+
+        <a th:href="@{/admin/settings}">SETTINGS</a>
+        <a th:href="@{/admin/logout}">LOGOUT</a>
+    </div>
+
+
+
+    <script>
+        $(document).ready(function () {
+            // Toggle the dropdown menus
+            $('.dropdown-btn').on('click', function () {
+                $(this).next('.dropdown-container').slideToggle();
+                $(this).find('i').toggleClass('bx-chevron-down bx-chevron-up');
+            });
+
+            // Toggle sidebar on small screens
+            $('.menu-btn').on('click', function () {
+                $('.sidebar').toggle();
+            });
+        });
+    </script>
+</body>
+</html>

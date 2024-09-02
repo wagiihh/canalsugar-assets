@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/admin2.css">
+    <link rel="stylesheet" href="../css/patient.css">
+    <link rel="stylesheet" href="../css/navigation.css">
+    <link rel="stylesheet" href="../css/viewTables.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .top-bar{
+            margin-left: 1800px;
+        }
+
+        .main--container {
+            margin-left: 270px; /* Adjust this to fit the sidebar width */
+            padding: 20px;
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            text-align: center;
+            margin-right: 300px;
+        }
+
+        th, td {
+            padding: 15px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .target-vs-sales--container {
+    background-image: url(../images/Sugar-factory.jpg);
+    background-size:cover;
+    background-position:center;
+    padding: 20px;
+}
+.sidebar{
+    margin-right: 100px;
+    padding-right: 100px;
+}
+    </style>
+    <title>Canal Sugar</title>
+</head>
+
+<body class="body">
+    <div th:insert="navigation"></div>
+
+
+    <div class="main--container">
+        <div class="target-vs-sales--container">
+            <div class="section--title">
+                <div class="sales--value">
+                    <h3 class="uppercase-text">Welcome  <span th:text="${FNAME}"></span>!</h3>
+
+                    <h3>Channel a supplier Here</h3>
+
+                    <form th:action="@{/admin/searchlaptops}" method="GET">
+                        <input type="search" name="search" class="input-text"
+                            placeholder="Search supplier"
+                            style="width:45%;">
+                        <input type="Submit" value="Search" class="login-btn btn-primary btn"
+                            style="padding-left: 25px; padding-right: 25px; padding-top: 10px; padding-bottom: 10px;">
+                    </form>
+                </div>
+            </div>
+            <div class="target--vs--sales">
+                <canvas id="tarsale"></canvas>
+            </div>
+        </div>
+        <div class="table">
+            <div class="section--title">
+                <h3 class="title">Upcoming Sessions</h3>
+                   
+               
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/sales.js"></script>
+    <script src="assets/js/orders.js"></script>
+    <script src="assets/js/products.js"></script>
+    <script src="assets/js/customers.js"></script>
+    <script src="assets/js/tarsale.js"></script>
+    <footer></footer>
+</body>
+
+</html>

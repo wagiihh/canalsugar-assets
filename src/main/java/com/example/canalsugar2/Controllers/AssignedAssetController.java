@@ -112,7 +112,26 @@ public class AssignedAssetController {
     
         return new RedirectView("/asset/viewassets");
     }
-    
+    @GetMapping("/viewassigned")
+    public ModelAndView showassigendForm() {
+        ModelAndView mav = new ModelAndView("viewassigned");
+
+        AssignedAsset assignedAsset=new AssignedAsset();
+
+        List<AssignedAsset> allAssigned = assignedAssetsRepository.findAll();
+        mav.addObject("allAssigned", allAssigned);
+
+        return mav;
+    }
+
+    @GetMapping("deleteassigned/{asid}")
+    @Transactional
+    public RedirectView deleteAssigned(@PathVariable Integer asid) {
+        AssignedAsset assigned=this.assignedAssetsRepository.findByAsid(asid);
+        this.assignedAssetsRepository.delete(assigned);
+
+        return new RedirectView("/assigned/viewassigned");
+    }
 
     
 }

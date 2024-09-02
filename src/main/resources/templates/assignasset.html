@@ -98,17 +98,17 @@
                 <option th:each="user : ${users}" th:value="${user.userID}" th:text="${user.firstname} + ' ' + ${user.lastname}"></option>
             </select>
 
-            <label for="assetType">Asset Type:</label>
+            <label for="assetType">Available Asset Types:</label>
             <select id="assetType" onchange="filterAssetsByType()">
                 <option value="all">All Types</option>
                 <option th:each="type : ${assetTypes}" th:value="${type}" th:text="${type}"></option>
             </select>
 
-            <label for="asset">Asset:</label>
+            <label for="asset">Available Assets:</label>
             <select id="asset" th:field="*{asset}">
                 <option th:each="asset : ${assets}" 
                         th:value="${asset.assetid}" 
-                        th:text="'Asset: ' + ${asset.assetname} + ' | Serial: ' + ${asset.assetserial} + ' | Type: ' + ${asset.assetType.name}" 
+                        th:text="'Brand Name: ' + ${asset.assetname} + ' | Serial: ' + ${asset.assetserial} + ' | Type: ' + ${asset.assetType.name}" 
                         th:attr="data-type=${asset.assetType.name}"></option>
             </select>
 

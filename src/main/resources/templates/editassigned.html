@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/appointmentForm.css">
+    <title>EDIT ASSIGNED ASSETS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-left: 270px;
+            padding-top: 20px;
+            padding-right: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            max-width: 600px;
+            padding: 20px;
+        }
+
+        .card-title {
+            text-align: center;
+            font-size: 28px;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555555;
+        }
+
+        .form-control {
+            width: 90%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #cccccc;
+            background-color: #f9f9f9;
+        }
+
+        .form-control[readonly] {
+            background-color: #e9e9e9;
+        }
+
+        select.form-control {
+            height: 40px;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .error-message {
+            color: #ff0000;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .btn-primary {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div th:insert="navigation"></div>
+
+    <div class="container mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title">EDIT ASSIGNED ASSETS</h2>
+                <form id="UserForm" th:action="@{/assigned/editassigned/{asid}(asid=${oldAssigned.asid})}" method="post"
+                      th:object="${oldAssigned}">
+                    <input type="hidden" th:field="*{asid}">
+                    <div id="patient-fields">
+                        <div class="form-group">
+                            <label for="assetname">Asset Brand Name:</label>
+                            <input type="text" class="form-control" id="assetname" th:field="*{Asset.assetname}" 
+                                   placeholder="Asset brand name Name" th:value="${oldAssigned.Asset.assetname}" readonly>
+                            <span th:if="${#fields.hasErrors('Asset.assetname')}" th:errors="*{Asset.assetname}" 
+                                  class="error-message"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="assetserial">Asset Serial Number:</label>
+                            <input type="text" class="form-control" id="assetserial" th:field="*{Asset.assetserial}" 
+                                   placeholder="Laptop Serial Number" th:value="${oldAssigned.Asset.assetserial}" readonly>
+                            <span th:if="${#fields.hasErrors('Asset.assetserial')}" th:errors="*{Asset.assetserial}" 
+                                  class="error-message"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="AssetModel">Asset Model:</label>
+                            <input type="text" class="form-control" id="LaptopModel" th:field="*{Asset.assetmodel}" 
+                                   placeholder="Asset Model" th:value="${oldAssigned.Asset.assetmodel}" readonly>
+                            <span th:if="${#fields.hasErrors('Asset.assetmodel')}" th:errors="*{Asset.assetmodel}" 
+                                  class="error-message"></span>
+                        </div>
+                        <br>
+                        <div class="form-group">
+                            <label for="user">User:</label>
+                            <select class="form-control" th:field="*{user}" required>
+                                <option th:each="user : ${users}" th:value="${user.userID}" 
+                                        th:text="${user.firstname} + ' ' + ${user.lastname}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="submit" type="submit" class="btn btn-primary" style="background-color: darkgreen;" name="submit">EDIT</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

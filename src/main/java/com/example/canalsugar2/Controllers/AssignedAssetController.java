@@ -123,6 +123,54 @@ public class AssignedAssetController {
 
         return mav;
     }
+    @GetMapping("editassigned/{asid}")
+    public ModelAndView editAssignedForm(@PathVariable Integer asid, HttpSession session) {
+        ModelAndView mav = new ModelAndView("editassigned");
+        AssignedAsset oldAssigned = this.assignedAssetsRepository.findByAsid(asid);
+        
+        if (oldAssigned != null && oldAssigned.getAsset() != null) {
+            Asset asset = assetRepository.findByAssetid(oldAssigned.getAsset().getAssetid());
+            
+            if (asset != null) {
+                oldAssigned.setAsset(asset);
+            } else {
+                // Handle case where asset is not found
+                mav.setViewName("errorPage"); // Example: redirecting to an error page.
+                mav.addObject("message", "Asset not found.");
+                return mav;
+            }
+        }
+        
+        List<User> users = userRepository.findAll();
+        mav.addObject("oldAssigned", oldAssigned);
+        mav.addObject("users", users);
+        return mav;
+    }
+    
+    
+    
+        
+    @PostMapping("editassigned/{asid}")
+    public RedirectView updateAssigned(@ModelAttribute("oldAssigned") AssignedAsset oldAssigned, @PathVariable Integer asid) {
+        // Fetch the existing AssignedLaptops object from the database to ensure it's managed
+        AssignedAsset existingAssigned = assignedAssetsRepository.findByAsid(asid);
+        
+        if (existingAssigned == null) {
+            throw new IllegalArgumentException("Assigned Asset not found");
+        }
+    
+        // Fetch the User from the database based on the ID in oldAssigned
+        User user = userRepository.findById(oldAssigned.getUser().getUserID())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        // Update only the modifiable fields
+        existingAssigned.setUser(user);
+        
+        // Save the updated AssignedLaptops object
+        this.assignedAssetsRepository.save(existingAssigned);
+        
+        return new RedirectView("/assigned/viewassigned");
+    }
 
     @GetMapping("deleteassigned/{asid}")
     @Transactional

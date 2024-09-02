@@ -181,5 +181,138 @@ public class AssignedAssetController {
         return new RedirectView("/assigned/viewassigned");
     }
 
+    @GetMapping("/viewavailable")
+    public ModelAndView viewAssetForm() {
+        ModelAndView mav = new ModelAndView("viewavailable");
+    
+        // Fetch all assets
+        List<Asset> allAssets = assetRepository.findAll();
+    
+        // Fetch all assigned assets
+        List<Asset> assignedAssets = assignedAssetsRepository.findAll().stream()
+            .map(AssignedAsset::getAsset)
+            .collect(Collectors.toList());
+    
+        // Determine available assets
+        List<Asset> availableAssets = allAssets.stream()
+            .filter(asset -> !assignedAssets.contains(asset))
+            .collect(Collectors.toList());
+    
+        // Fetch asset types for filtering
+        List<AssetType> assetTypes = assetTypeRepository.findAll();
+    
+        // Add objects to the model
+        mav.addObject("assetTypes", assetTypes);
+        mav.addObject("availableAssets", availableAssets);
+    
+        return mav;
+    }
+
+    
+    // @GetMapping("assignasset/{assetid}")
+    // public ModelAndView editAssignForm(@PathVariable Integer assetid, HttpSession session) {
+    //     ModelAndView mav = new ModelAndView("assignspecificasset");
+        
+    //     // Retrieve the asset by its ID
+    //     Asset asset = assetRepository.findByAssetid(assetid);
+    //         // .orElseThrow(() -> new IllegalArgumentException("Asset not found"));
+        
+    //     // Prepare a new AssignedAsset object with the retrieved asset
+    //     AssignedAsset newAssignment = new AssignedAsset();
+    //     newAssignment.setAsset(asset);
+    
+    //     // Fetch all users for the selection
+    //     List<User> users = userRepository.findAll();
+
+    
+    //     // Add necessary objects to the model
+    //     mav.addObject("newAssignment", newAssignment);
+    //     mav.addObject("users", users);
+    //     mav.addObject("assett", asset);
+    
+    //     return mav;
+    // }
+    
+    
+    
+    
+    // @PostMapping("/assignasset/{assetid}")
+    // public RedirectView assignAsset(@ModelAttribute("newAssignment") AssignedAsset newAssignment,
+    //                                 @RequestParam("userId") Integer userId,
+    //                                 @PathVariable Integer assetid) {
+    //     // Fetch the selected user
+    //     User user = userRepository.findByUserID(userId);
+    //     if (user == null) {
+    //         throw new IllegalArgumentException("User not found");
+    //     }
+    
+    //     // Fetch the asset
+    //     Asset asset = assetRepository.findByAssetid(assetid);
+    //     if (asset == null) {
+    //         throw new IllegalArgumentException("Asset not found");
+    //     }
+    
+    //     // Set the user and asset to the new assignment
+    //     newAssignment.setUser(user);
+    //     newAssignment.setAsset(asset);
+    
+    //     // Save the assignment
+    //     assignedAssetsRepository.save(newAssignment);
+    
+    //     // Redirect to a success page or another view
+    //     return new RedirectView("/assigned/viewassigned");
+    // }
+    
+
+    // GET method to show the form for assigning an asset
+@GetMapping("/assignasset/{assetid}")
+public ModelAndView showAssignAssetForm(@PathVariable Integer assetid) {
+    ModelAndView mav = new ModelAndView("assignspecificasset");
+
+    Asset asset = assetRepository.findByAssetid(assetid);
+    if (asset == null) {
+        // Handle the case where the asset is not found
+        mav.setViewName("errorPage");
+        mav.addObject("message", "Asset not found.");
+        return mav;
+    }
+
+    AssignedAsset newAssignment = new AssignedAsset();
+    newAssignment.setAsset(asset);
+
+    List<User> users = userRepository.findAll();
+
+    mav.addObject("newAssignment", newAssignment);
+    mav.addObject("users", users);
+    mav.addObject("asset", asset);
+
+    return mav;
+}
+
+// POST method to handle the form submission
+@PostMapping("/assignasset/{assetid}")
+public RedirectView assignAsset(@ModelAttribute("newAssignment") AssignedAsset newAssignment,
+                                @RequestParam("userId") Integer userId,
+                                @PathVariable Integer assetid) {
+    User user = userRepository.findByUserID(userId);
+    if (user == null) {
+        throw new IllegalArgumentException("User not found");
+    }
+
+    Asset asset = assetRepository.findByAssetid(assetid);
+    if (asset == null) {
+        throw new IllegalArgumentException("Asset not found");
+    }
+
+    // Set the user and asset to the new assignment
+    newAssignment.setUser(user);
+    newAssignment.setAsset(asset);
+
+    // Save the assignment
+    assignedAssetsRepository.save(newAssignment);
+
+    return new RedirectView("/assigned/viewassigned");
+}
+
     
 }

@@ -81,7 +81,7 @@ public class AssetsController {
         } else {
             AssetType assetType=newAssetType.getAssetType();
             this.assetTypeRepository.save(assetType);
-            return new ModelAndView("redirect:/admin/home");
+            return new ModelAndView("redirect:/asset/viewassettypes");
 
         }
     }
@@ -108,7 +108,7 @@ public class AssetsController {
         } else {
             Asset asset=newAsset.getAsset();
             this.assetRepository.save(asset);
-            return new ModelAndView("redirect:/admin/viewassets");
+            return new ModelAndView("redirect:/asset/viewassets");
 
         }
     }
@@ -146,5 +146,35 @@ public class AssetsController {
         List<AssetType>assetTypes=assetTypeRepository.findAll();
         mav.addObject("assetTypes", assetTypes);
         return mav;
+    }
+    @GetMapping("editassettype/{assettypeid}")
+    public ModelAndView editassetype(@PathVariable Integer assettypeid, HttpSession session) {
+        ModelAndView mav = new ModelAndView("editassettype");
+        AssetType oldassettype=this.assetTypeRepository.findByAssettypeid(assettypeid);
+        System.out.println("-------------------------------------the user sent in the edit form :" + assettypeid);
+        mav.addObject("oldassettype", oldassettype);
+        return mav;
+    }
+
+    @PostMapping("editassettype/{assettypeid}")
+    public RedirectView editassetypeform(@ModelAttribute("oldassettype") AssetType oldassettype, @PathVariable Integer assettypeid) {
+        oldassettype.setAssettypeid(assettypeid);
+        this.assetTypeRepository.save(oldassettype);
+        return new RedirectView("/asset/viewassettypes");
+    }
+    @GetMapping("deleteassettype/{assettypeid}")
+    @Transactional
+    public RedirectView deleteAssetType(@PathVariable Integer assettypeid) {
+        AssetType currAssetType=this.assetTypeRepository.findByAssettypeid(assettypeid);
+        this.assetTypeRepository.delete(currAssetType);
+        return new RedirectView("/asset/viewassettypes");
+    }
+    @GetMapping("deleteasset/{assetid}")
+    @Transactional
+    public RedirectView deleteAppointment(@PathVariable Integer assetid) {
+        Asset asset=this.assetRepository.findByAssetid(assetid);
+        this.assetRepository.delete(asset);
+
+        return new RedirectView("/asset/viewassets");
     }
 }

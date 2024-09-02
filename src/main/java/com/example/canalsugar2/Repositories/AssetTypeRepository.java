@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface AssetTypeRepository extends JpaRepository<AssetType,Integer> {
     AssetType  findByName(String name);
+    AssetType findByAssettypeid(int assettypeid);
 }

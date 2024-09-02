@@ -47,9 +47,9 @@
         <td th:text="${asset.assettypeid}"></td>
         <td th:text="${asset.name}"></td>
 <td>
-    <a id="edit"    th:href="@{'edit/' + ${asset.assettypeid}}">EDIT</a>
+    <a id="edit"    th:href="@{'editassettype/' + ${asset.assettypeid}}">EDIT</a>
     ||
-    <a id="delete"  th:href="@{'delete/' + ${asset.assettypeid}}">DELETE</a>
+    <a id="delete"  th:href="@{'deleteassettype/' + ${asset.assettypeid}}">DELETE</a>
 </td>
       </tr>
       

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Assign Asset to User</title>
+    <script>
+        function filterAssetsByType() {
+            const selectedType = document.getElementById("assetType").value;
+            const assetOptions = document.querySelectorAll("#asset option");
+
+            assetOptions.forEach(option => {
+                option.style.display = option.getAttribute("data-type") === selectedType || selectedType === "all" ? "block" : "none";
+            });
+
+            // Automatically select the first visible option
+            const firstVisibleOption = document.querySelector("#asset option[style='display: block;']");
+            if (firstVisibleOption) {
+                firstVisibleOption.selected = true;
+            }
+        }
+    </script>
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .container {
+        max-width: 400px;
+        width: 100%;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        box-sizing: border-box;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+    }
+
+    select {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+
+    button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #0d7a0d;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #0b5c0b;
+    }
+
+    .error-message {
+        color: red;
+        text-align: center;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+</style>
+<body>
+    <div th:include="navigation"></div>
+    <div class="container">
+        <h1>Assign Asset To User</h1>
+
+        <form th:action="@{/assigned/assign}" th:object="${assignedAsset}" method="post">
+            <label for="user">User:</label>
+            <select th:field="*{user}">
+                <option th:each="user : ${users}" th:value="${user.userID}" th:text="${user.firstname} + ' ' + ${user.lastname}"></option>
+            </select>
+
+            <label for="assetType">Asset Type:</label>
+            <select id="assetType" onchange="filterAssetsByType()">
+                <option value="all">All Types</option>
+                <option th:each="type : ${assetTypes}" th:value="${type}" th:text="${type}"></option>
+            </select>
+
+            <label for="asset">Asset:</label>
+            <select id="asset" th:field="*{asset}">
+                <option th:each="asset : ${assets}" 
+                        th:value="${asset.assetid}" 
+                        th:text="'Asset: ' + ${asset.assetname} + ' | Serial: ' + ${asset.assetserial} + ' | Type: ' + ${asset.assetType.name}" 
+                        th:attr="data-type=${asset.assetType.name}"></option>
+            </select>
+
+            <button type="submit">Assign Asset</button>
+        </form>
+
+        <div th:if="${error}">
+            <p style="color:red;">[[${error}]]</p>
+        </div>
+    </div>
+</body>
+</html>

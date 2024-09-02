@@ -101,6 +101,7 @@
                         <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="Asset Name">
                         <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></span>
                     </div>
+                    <button id="submit" type="submit" class="btn btn-primary" name="submit">ADD</button>
                 </form>
 
 
@@ -112,8 +113,7 @@
 
 
 
-            <button id="submit" type="submit" class="btn btn-primary" name="submit">ADD</button>
-            </form>
+            
         </div>
     </div>
     </div>

@@ -1,0 +1,231 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canal Sugar</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* (Style definitions remain the same as provided) */
+    </style>
+</head>
+    <style>
+        /* Top Bar */
+        .top-bar {
+            width: calc(100% - 250px);
+            height: 50px;
+            background-color: #f4f4f4;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #f4f4f4;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            transition: all 0.3s;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            color: #333;
+            text-decoration: solid;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s; 
+        }
+
+        .sidebar a:hover {
+            background-color: #165d0a; 
+            color: #ffffff;
+        }
+
+        /* Dropdown */
+        .dropdown-btn {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #f4f4f4;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-size: 16px;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s; 
+        }
+
+        .dropdown-btn:hover {
+            background-color: #165d0a; 
+            color: #ffffff;
+        }
+
+        .dropdown-container {
+            display: none;
+            background-color: #f4f4f4;
+            padding-left: 20px;
+        }
+
+        .dropdown-container a {
+            padding: 8px 10px;
+            display: block;
+            color: #333;
+            text-decoration: solid;
+        }
+
+        .dropdown-container a:hover {
+            background-color: #165d0a; 
+            color: #ffffff;
+        }
+
+        /* Asset Boxes */
+        .asset-section {
+            margin-bottom: 40px;
+        }
+
+        .asset-section label {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .asset-box {
+            width: 200px;
+            height: 100px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .asset-box h3 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .asset-box a {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .asset-box p {
+            margin: 5px 0 0;
+            font-size: 16px;
+            color: #777;
+        }
+        
+
+        /* Container for asset boxes */
+        .assets-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+
+        /* Responsive Sidebar */
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                left: 0;
+                top: 50px;
+            }
+            .top-bar {
+                width: 100%;
+                left: 0;
+            }
+            .sidebar a {float: left;}
+            .container {
+                margin-left: 0;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .top-bar .menu-btn {
+                display: block;
+                position: absolute;
+                left: 20px;
+                top: 10px;
+            }
+        }
+
+        .container {
+            margin-left: 270px;
+            padding-top: 60px;
+        }
+        .top-bar{
+            margin-left: 10px;
+            padding-left: 10px;
+        }
+    </style>
+<body>
+    <div th:insert="navigation"></div>
+   
+    <div class="container">
+        <div th:each="assetStats : ${assetStatisticsList}">
+            <div class="asset-section">
+                <label th:text="${assetStats.assetType.name + ' RECORDS:'}"></label>
+                <div class="assets-container">
+                    <div class="asset-box">
+                        <a th:text="${assetStats.totalAssets}" th:href="@{/asset/viewassets}" style="font-size: 24px; color: #333; text-decoration: none;"></a>
+                        <a th:href="@{/asset/viewassets}" style="font-size: 16px; color: #777; text-decoration: none;">Total Number</a>
+                    </div>
+                    <div class="asset-box">
+                        <a th:text="${assetStats.usedAssets}" th:href="@{/assigned/viewassigned}" style="font-size: 24px; color: #333; text-decoration: none;"></a>
+                        <a th:href="@{/assigned/viewassigned}" style="font-size: 16px; color: #777; text-decoration: none;">Used Number</a>
+                    </div>
+                    <div class="asset-box">
+                        <a th:text="${assetStats.availableAssets}" th:href="@{/assigned/viewavailable}" style="font-size: 24px; color: #333; text-decoration: none;"></a>
+                        <a th:href="@{/assigned/viewavailable}" style="font-size: 16px; color: #777; text-decoration: none;">Available Number</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Toggle the dropdown menus
+            $('.dropdown-btn').on('click', function () {
+                $(this).next('.dropdown-container').slideToggle();
+                $(this).find('i').toggleClass('bx-chevron-down bx-chevron-up');
+            });
+
+            // Toggle sidebar on small screens
+            $('.menu-btn').on('click', function () {
+                $('.sidebar').toggle();
+            });
+        });
+    </script>
+</body>
+</html>
+

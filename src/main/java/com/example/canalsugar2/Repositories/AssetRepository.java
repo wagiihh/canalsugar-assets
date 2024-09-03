@@ -1,6 +1,7 @@
 package com.example.canalsugar2.Repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.example.canalsugar2.Models.Asset;
 import com.example.canalsugar2.Models.AssetType;
@@ -12,5 +13,9 @@ public interface AssetRepository extends JpaRepository<Asset,Integer> {
     Asset findByAssetid(int assetid);
     Asset findByAssetType(AssetType assetType);
     Asset findByAssetserial(String assetserial);
+        long countByAssetType(AssetType assetType);
+
+    @Query("SELECT DISTINCT a.assetType FROM Asset a")
+    List<AssetType> findDistinctAssetTypes();
     
 }

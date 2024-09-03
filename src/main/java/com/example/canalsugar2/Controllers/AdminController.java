@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import org.hibernate.mapping.Map;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
@@ -29,9 +30,11 @@ import com.example.canalsugar2.Models.AssetType;
 import com.example.canalsugar2.Models.Department;
 // import com.example.canalsugar.Models.Laptop;
 import com.example.canalsugar2.Models.User;
+import com.example.canalsugar2.Models.AssetStat;
 import com.example.canalsugar2.Repositories.AdminRepository;
 import com.example.canalsugar2.Repositories.AssetRepository;
 import com.example.canalsugar2.Repositories.AssetTypeRepository;
+import com.example.canalsugar2.Repositories.AssignedAssetRepository;
 // import com.example.canalsugar.Repositories.AssignedLaptopsRepository;
 import com.example.canalsugar2.Repositories.DepartmentRepository;
 // import com.example.canalsugar.Repositories.LaptopRepository;
@@ -43,6 +46,9 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import java.util.HashMap;
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/admin")
@@ -59,6 +65,8 @@ public class AdminController {
     private AssetTypeRepository assetTypeRepository;
     @Autowired
     private AssetRepository assetRepository;
+    @Autowired
+    private AssignedAssetRepository assignedAssetRepository;
 
     @GetMapping("/home")
     public ModelAndView Home(HttpSession session) {
@@ -267,19 +275,31 @@ public class AdminController {
 
     
 
-    // @GetMapping("/stock")
-    // public ModelAndView showstockForm() {
-    //     ModelAndView mav = new ModelAndView("stock");
-    //     long totalLaptops = laptopRepository.count();
-    //     long usedLaptops = assignedLaptopsRepository.count();
+    @GetMapping("/stock")
+    public ModelAndView showStockForm() {
+        ModelAndView mav = new ModelAndView("stock");
 
-    //     mav.addObject("totalLaptops", totalLaptops);
-    //     mav.addObject("usedLaptops", usedLaptops);
-    //     mav.addObject("availableLaptops", totalLaptops - usedLaptops);
+        // Find distinct asset types
+        List<AssetType> assetTypes = assetRepository.findDistinctAssetTypes();
 
-    //     return mav;
-    // }
+        // Create a list to hold statistics for each asset type
+        List<AssetStat> assetStatisticsList = new ArrayList<>();
 
+        for (AssetType assetType : assetTypes) {
+            long totalAssets = assetRepository.countByAssetType(assetType);
+            long usedAssets = assignedAssetRepository.countByAsset_AssetType(assetType);
+            long availableAssets = totalAssets - usedAssets;
+
+            // Create an AssetStatistics object and add it to the list
+            AssetStat stats = new AssetStat(assetType, totalAssets, usedAssets, availableAssets);
+            assetStatisticsList.add(stats);
+        }
+
+        // Add the assetStatistics list to the ModelAndView
+        mav.addObject("assetStatisticsList", assetStatisticsList);
+
+        return mav;
+    }
 
     @GetMapping("/Login")
     public ModelAndView Login() {

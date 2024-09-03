@@ -3,6 +3,7 @@ package com.example.canalsugar2.Repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.canalsugar2.Models.Asset;
+import com.example.canalsugar2.Models.AssetType;
 import com.example.canalsugar2.Models.AssignedAsset;
 import com.example.canalsugar2.Models.User;
 
@@ -13,4 +14,5 @@ public interface AssignedAssetRepository extends JpaRepository<AssignedAsset,Int
     AssignedAsset findByAsid(int asid);
     AssignedAsset findByAsset(Asset asset);
     AssignedAsset findByUser(User user);
+    long countByAsset_AssetType(AssetType assetType);
 }

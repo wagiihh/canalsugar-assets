@@ -143,10 +143,10 @@
         <input type="text" id="searchBar" placeholder="Search for users..." onkeyup="filterUsers()">
 
         <div class="form-group">
-            <label for="assetTypeFilter">Filter by department:</label>
-            <select id="assetTypeFilter" class="form-control" onchange="filterAssets()">
-                <option value="all">All Departments </option>
-                <option th:each="dept : ${departments}" th:value="${dept.name}" th:text="${dept.name}"></option>
+            <label for="departmentFilter">Filter by department:</label>
+            <select id="departmentFilter" class="form-control" onchange="filterUsers()">
+                <option value="all">All Departments</option>
+                <option th:each="dept : ${departments}" th:value="${dept.Departmentname}" th:text="${dept.Departmentname}"></option>
             </select>
         </div>
 
@@ -169,7 +169,7 @@
                     <td th:text="${user.lastname}"></td>
                     <td th:text="${user.email}"></td>
                     <td th:text="${user.number}"></td>
-                    <td th:text="${user.department.Departmentname}"></td>
+                    <td th:text="${user.department.Departmentname}" class="departmentCell"></td>
                     <td>
                         <a id="edit" th:href="@{'edit/' + ${user.UserID}}">EDIT</a> ||
                         <a id="delete" th:href="@{'delete/' + ${user.UserID}}">DELETE</a>
@@ -182,17 +182,27 @@
     <script>
         function filterUsers() {
             const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+            const selectedDepartment = document.getElementById('departmentFilter').value.toLowerCase();
             const rows = document.querySelectorAll('#userTableBody tr');
 
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                let rowText = '';
+            rows.forEach(function(row) {
+                const department = row.querySelector('.departmentCell').textContent.toLowerCase();
+                const firstName = row.cells[1].textContent.toLowerCase();
+                const lastName = row.cells[2].textContent.toLowerCase();
+                const email = row.cells[3].textContent.toLowerCase();
+                const number = row.cells[4].textContent.toLowerCase();
 
-                cells.forEach(cell => {
-                    rowText += cell.textContent.toLowerCase() + ' ';
-                });
+                // Check if the row matches the search term
+                const matchesSearch = firstName.includes(searchTerm) ||
+                                      lastName.includes(searchTerm) ||
+                                      email.includes(searchTerm) ||
+                                      number.includes(searchTerm);
 
-                row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+                // Check if the row matches the selected department
+                const matchesDepartment = (selectedDepartment === 'all') || (department === selectedDepartment);
+
+                // Display the row only if it matches both search and department filters
+                row.style.display = (matchesSearch && matchesDepartment) ? '' : 'none';
             });
         }
     </script>

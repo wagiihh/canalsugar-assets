@@ -7,8 +7,10 @@ import java.util.stream.Collectors;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.canalsugar2.Models.Admin;
 import com.example.canalsugar2.Models.Asset;
+import com.example.canalsugar2.Models.AssetStat;
 import com.example.canalsugar2.Models.AssetType;
 import com.example.canalsugar2.Models.AssignedAsset;
 // import com.example.canalsugar.Models.AssignedLaptops;
@@ -61,7 +64,8 @@ public class AssignedAssetController {
     private AssetRepository assetRepository;
     @Autowired
     private AssignedAssetRepository assignedAssetsRepository;
-
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
     @GetMapping("/assign")
     public ModelAndView showAssignAssetForm(HttpSession session) {
         ModelAndView mav = new ModelAndView("assignasset");
@@ -234,63 +238,99 @@ public ModelAndView showAssignAssetForm(@PathVariable Integer assetid) {
 }
 
 // POST method to handle the form submission
-@PostMapping("/assignasset/{assetid}")
-public RedirectView assignAsset(@ModelAttribute("newAssignment") AssignedAsset newAssignment,
-                                @RequestParam("userId") Integer userId,
-                                @PathVariable Integer assetid) {
-    User user = userRepository.findByUserID(userId);
-    if (user == null) {
-        throw new IllegalArgumentException("User not found");
-    }
 
-    Asset asset = assetRepository.findByAssetid(assetid);
-    if (asset == null) {
-        throw new IllegalArgumentException("Asset not found");
-    }
-
-    // Set the user and asset to the new assignment
-    newAssignment.setUser(user);
-    newAssignment.setAsset(asset);
-
-    // Save the assignment
-    assignedAssetsRepository.save(newAssignment);
-    sendStockWarning();
-    return new RedirectView("/assigned/viewassigned");
-}
-public void sendStockWarning() {
-    // Using the injected mailSender
-    if (mailSender == null) {
-        System.out.println("MailSender is not configured");
-        return;
-    }
-
-    try {
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-        // Set the common fields
-        helper.setFrom("tabibii.application@gmail.com");
-        helper.setSubject("STOCK WARNING!!!!!");
-
-        // Get all admins and prepare the message
-        List<Admin> allAdmins = this.adminRepository.findAll();
-        String emailMessage = "DEAR ADMIN, PLEASE CHECK YOUR STOCK AS IT IS ALMOST EMPTY. GREETINGS FROM THE CANAL SUGAR ASSET MANAGEMENT WEBSITE.";
-
-        for (Admin admin : allAdmins) {
-            helper.setTo(admin.getEmail());
-            helper.setText(String.format(emailMessage, admin.getFirstname()));
-
-            // Send email
-            mailSender.send(message);
-            System.out.println("Mail sent to admin: " + admin.getEmail());
+    @PostMapping("/assignasset/{assetid}")
+    public RedirectView assignAsset(@ModelAttribute("newAssignment") AssignedAsset newAssignment,
+                                    @RequestParam("userId") Integer userId,
+                                    @PathVariable Integer assetid) {
+        User user = userRepository.findByUserID(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
         }
 
-        System.out.println("All emails sent successfully.");
+        Asset asset = assetRepository.findByAssetid(assetid);
+        if (asset == null) {
+            throw new IllegalArgumentException("Asset not found");
+        }
 
-    } catch (MessagingException e) {
-        e.printStackTrace();
-        System.out.println("Error while sending mail.");
+        // Set the user and asset to the new assignment
+        newAssignment.setUser(user);
+        newAssignment.setAsset(asset);
+
+        // Save the assignment
+        assignedAssetsRepository.save(newAssignment);
+
+        // Publish the event
+        eventPublisher.publishEvent(new AssetAssignedEvent(this, assetid, userId));
+
+
+        return new RedirectView("/assigned/viewassigned");
+    }
+
+   @Async
+    public void sendStockWarning() {
+        if (mailSender == null) {
+            System.out.println("MailSender is not configured");
+            return;
+        }
+    
+        try {
+            List<AssetStat> assetStatisticsList = getAssetStatistics();
+            
+            // Prepare the email message with asset statistics
+            StringBuilder emailMessage = new StringBuilder();
+            emailMessage.append("PLEASE CHECK THE STOCK FOR THE FOLLOWING ASSET TYPES AS THEY ARE ALMOST EMPTY:\n\n");
+    
+            for (AssetStat stats : assetStatisticsList) {
+                emailMessage.append(String.format("Asset Type: %s, Available Assets: %d\n", 
+                    stats.getAssetType().getName(), stats.getAvailableAssets()));
+            }
+    
+            List<Admin> allAdmins = this.adminRepository.findAll();
+    
+            for (Admin admin : allAdmins) {
+                MimeMessage message = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                
+                // Set the individual fields for each email
+                helper.setFrom("tabibii.application@gmail.com");
+                helper.setTo(admin.getEmail());
+                helper.setSubject("STOCK WARNING!!!!!");
+                helper.setText(String.format("Dear %s, \n\n%s\n\n Greetings from the Canal Sugar Asset Management Website.", 
+                    admin.getFirstname(), emailMessage.toString()));
+    
+                // Send email
+                mailSender.send(message);
+                System.out.println("Mail sent to admin: " + admin.getEmail());
+            }
+    
+            System.out.println("All emails sent successfully.");
+    
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            System.out.println("Error while sending mail.");
+        }
+    }
+    
+
+
+    private List<AssetStat> getAssetStatistics() {
+        List<AssetType> assetTypes = assetTypeRepository.findAll();
+        List<AssetStat> assetStatisticsList = new ArrayList<>();
+    
+        for (AssetType assetType : assetTypes) {
+            long totalAssets = assetRepository.countByAssetType(assetType);
+            long usedAssets = assignedAssetsRepository.countByAsset_AssetType(assetType);
+            long availableAssets = totalAssets - usedAssets;
+    
+            if (availableAssets < 4) {
+                AssetStat stats = new AssetStat(assetType, totalAssets, usedAssets, availableAssets);
+                assetStatisticsList.add(stats);
+            }
+        }
+        
+        return assetStatisticsList;
     }
 }
     
-}
+

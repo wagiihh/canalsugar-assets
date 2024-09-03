@@ -225,7 +225,7 @@ public RedirectView deleteAsset(@PathVariable Integer assetid) {
                 helper.setFrom("tabibii.application@gmail.com");
                 helper.setTo(admin.getEmail());
                 helper.setSubject("STOCK WARNING!!!!!");
-                helper.setText(String.format("DEAR %s, \n\n%s\n\n Greetings from the Canal Sugar Asset Management Website.", 
+                helper.setText(String.format("Dear %s, \n\n%s\n\n Greetings from the Canal Sugar Asset Management Website.", 
                     admin.getFirstname(), emailMessage.toString()));
     
                 // Send email

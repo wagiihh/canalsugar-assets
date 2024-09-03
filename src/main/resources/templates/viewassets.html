@@ -373,6 +373,15 @@
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
+    // Add the title
+    doc.setFontSize(18);
+    doc.setTextColor(22, 93, 10); // Dark green color
+    doc.text('CANAL SUGAR ASSET REPORT', 14, 20); // Title position and text
+
+    // Add some space between title and table
+    doc.setFontSize(12);
+    doc.text('', 14, 30);
+
     // Initialize the table data
     let data = [];
     let headers = [];
@@ -394,16 +403,21 @@
 
     // Use autoTable to add the table to the PDF
     doc.autoTable({
+        startY: 30, // Start the table after the title
         head: [data[0]],
         body: data.slice(1),
+        headStyles: {
+            fillColor: [22, 93, 10] // Dark green color for header cells
+        },
         styles: {
-            fontSize: 8, // adjust font size
+            fontSize: 10, // Adjust font size
         }
     });
 
     // Save the PDF
-    doc.save('assets.pdf');
+    doc.save('assets_report.pdf');
 }
+
 
 const pdf_btn = document.querySelector('#toPDF');
 pdf_btn.onclick = () => {

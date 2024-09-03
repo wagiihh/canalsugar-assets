@@ -96,42 +96,42 @@
                         <div class="form-group">
                             
                             <label for="firstname">First Name:</label>
-                            <input type="text" class="form-control" id="firstname" th:field="*{firstname}" placeholder="First Name" >
+                            <input type="text" class="form-control" id="firstname" th:field="*{firstname}" placeholder="First Name" required >
                             <span th:if="${#fields.hasErrors('firstname')}" th:errors="*{firstname}" class="error-message"></span>
                             <span id="error-fname" class="error-message"> </span>
                         </div>
 
                         <div class="form-group">
                             <label for="lastname">Last Name:</label>
-                            <input type="text" class="form-control" id="lastname" th:field="*{lastname}" placeholder="Last Name" >
+                            <input type="text" class="form-control" id="lastname" th:field="*{lastname}" placeholder="Last Name" required>
                             <span th:if="${#fields.hasErrors('lastname')}" th:errors="*{lastname}" class="error-message"></span>
                             <div id="lname-error" class="error-message"></div>
                             <span id="error-lname" class="error-message"> </span>
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>
-                            <input type="text" class="form-control" id="email" th:field="*{email}" placeholder="Email Address" >
+                            <input type="text" class="form-control" id="email" th:field="*{email}" placeholder="Email Address" required>
                             <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></span>
                             <span id="error-email" class="error-message"> </span>
                         </div>
 
                         <div class="form-group">
                             <label for="phone">Phone Number:</label>
-                            <input type="text" class="form-control" id="phone" th:field="*{number}" placeholder="Phone Number" >
+                            <input type="text" class="form-control" id="phone" th:field="*{number}" placeholder="Phone Number" required>
                             <span th:if="${#fields.hasErrors('number')}" th:errors="*{number}" class="error-message"></span>
                             <span id="error-phone" class="error-message"> </span>
                         </div>
 
                         <div class="form-group">
                             <label for="password">Password:</label>
-                            <input type="password" class="form-control" id="password" th:field="*{pass}" placeholder="Password" >
+                            <input type="password" class="form-control" id="password" th:field="*{pass}" placeholder="Password" required>
                             <span th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}" class="error-message"></span>
                              <span id="error-pass" class="error-message"> </span>
                         </div>
     
                         <div class="form-group">
                             <label for="cpassword">Confirm password:</label>
-                            <input type="password" class="form-control" id="cpassword" placeholder="Confirm Password" name="cpassword" >
+                            <input type="password" class="form-control" id="cpassword" placeholder="Confirm Password" name="cpassword" required>
                            
                             
                         </div>

@@ -96,14 +96,14 @@
                     <div id="patient-fields">
                         <div class="form-group">
                             <label for="firstname">Asset Brand Name:</label>
-                            <input type="text" class="form-control" id="assetname" th:field="*{assetname}" placeholder=" Asset Brand Name" >
+                            <input type="text" class="form-control" id="assetname" th:field="*{assetname}" placeholder=" Asset Brand Name" required>
                             <span th:if="${#fields.hasErrors('assetname')}" th:errors="*{assetname}" class="error-message"></span>
                             <span id="error-fname" class="error-message"> </span>
                         </div>
 
                         <div class="form-group">
                             <label for="lastname">Asset Serial Number:</label>
-                            <input type="text" class="form-control" id="assetserial" th:field="*{assetserial}" placeholder="Asset Serial Number" >
+                            <input type="text" class="form-control" id="assetserial" th:field="*{assetserial}" placeholder="Asset Serial Number" required>
                             <span th:if="${#fields.hasErrors('assetserial')}" th:errors="*{assetserial}" class="error-message"></span>
                             <div id="lname-error" class="error-message"></div>
                             <span id="error-lname" class="error-message"> </span>
@@ -111,7 +111,7 @@
 
                         <div class="form-group">
                             <label for="phone">Asset Model:</label>
-                            <input type="text" class="form-control" id="phone" th:field="*{assetmodel}" placeholder="Asset Model" >
+                            <input type="text" class="form-control" id="phone" th:field="*{assetmodel}" placeholder="Asset Model" required>
                             <span th:if="${#fields.hasErrors('assetmodel')}" th:errors="*{assetmodel}" class="error-message"></span>
                             <span id="error-phone" class="error-message"> </span>
                         </div>

@@ -177,9 +177,10 @@ public class AdminController {
         ModelAndView mav = new ModelAndView("viewUsers.html");
 
         User newUser = new User();
-
         List<User> allUsers = userRepository.findAll();
+        List<Department>allDepartments=departmentRepository.findAll();
         mav.addObject("allUsers", allUsers);
+        mav.addObject("departments", allDepartments);
 
         return mav;
     }

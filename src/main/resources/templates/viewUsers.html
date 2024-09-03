@@ -125,7 +125,7 @@
 
     /* Search bar styling */
     #searchBar {
-        width: 100%;
+        width: 40%;
         padding: 10px;
         margin-bottom: 10px;
         border: 1px solid #ccc;
@@ -141,6 +141,14 @@
 
         <!-- Search bar -->
         <input type="text" id="searchBar" placeholder="Search for users..." onkeyup="filterUsers()">
+
+        <div class="form-group">
+            <label for="assetTypeFilter">Filter by department:</label>
+            <select id="assetTypeFilter" class="form-control" onchange="filterAssets()">
+                <option value="all">All Departments </option>
+                <option th:each="dept : ${departments}" th:value="${dept.name}" th:text="${dept.name}"></option>
+            </select>
+        </div>
 
         <table class="table table-dark">
             <thead>

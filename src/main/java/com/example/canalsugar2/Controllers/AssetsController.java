@@ -2,6 +2,7 @@ package com.example.canalsugar2.Controllers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -20,9 +21,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.example.canalsugar2.Models.Admin;
 import com.example.canalsugar2.Models.Asset;
+import com.example.canalsugar2.Models.AssetStat;
 import com.example.canalsugar2.Models.AssetType;
 // import com.example.canalsugar.Models.AssignedLaptops;
 import com.example.canalsugar2.Models.Department;
@@ -31,11 +35,14 @@ import com.example.canalsugar2.Models.User;
 import com.example.canalsugar2.Repositories.AdminRepository;
 import com.example.canalsugar2.Repositories.AssetRepository;
 import com.example.canalsugar2.Repositories.AssetTypeRepository;
+import com.example.canalsugar2.Repositories.AssignedAssetRepository;
 // import com.example.canalsugar.Repositories.AssignedLaptopsRepository;
 import com.example.canalsugar2.Repositories.DepartmentRepository;
 // import com.example.canalsugar.Repositories.LaptopRepository;
 // import com.example.canalsugar.Repositories.UserRepository;
 import com.example.canalsugar2.Repositories.UserRepository;
+import org.springframework.context.ApplicationEventPublisher;
+
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -44,6 +51,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/asset")
+@EnableAsync
 public class AssetsController {
     @Autowired
     private AdminRepository adminRepository;
@@ -57,6 +65,13 @@ public class AssetsController {
     private AssetTypeRepository assetTypeRepository;
     @Autowired
     private AssetRepository assetRepository;
+    @Autowired
+    private AssignedAssetRepository assignedAssetRepository;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
+    // private final Executor executor = Executors.newFixedThreadPool(5);
 
     
     @GetMapping("/addAssetType")
@@ -170,36 +185,48 @@ public class AssetsController {
         return new RedirectView("/asset/viewassettypes");
     }
     @GetMapping("deleteasset/{assetid}")
-    @Transactional
-    public RedirectView deleteAppointment(@PathVariable Integer assetid) {
-        Asset asset=this.assetRepository.findByAssetid(assetid);
-        this.assetRepository.delete(asset);
-        sendStockWarning();
-        return new RedirectView("/asset/viewassets");
-    }
+@Transactional
+public RedirectView deleteAsset(@PathVariable Integer assetid) {
+    Asset asset = this.assetRepository.findByAssetid(assetid);
+    this.assetRepository.delete(asset);
 
+    // Publish the event
+    eventPublisher.publishEvent(new AssetDeletedEvent(this, assetid));
+
+    return new RedirectView("/asset/viewassets");
+}
+
+    @Async
     public void sendStockWarning() {
-        // Using the injected mailSender
         if (mailSender == null) {
             System.out.println("MailSender is not configured");
             return;
         }
     
         try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            List<AssetStat> assetStatisticsList = getAssetStatistics();
+            
+            // Prepare the email message with asset statistics
+            StringBuilder emailMessage = new StringBuilder();
+            emailMessage.append("PLEASE CHECK THE STOCK FOR THE FOLLOWING ASSET TYPES AS THEY ARE ALMOST EMPTY:\n\n");
     
-            // Set the common fields
-            helper.setFrom("tabibii.application@gmail.com");
-            helper.setSubject("STOCK WARNING!!!!!");
+            for (AssetStat stats : assetStatisticsList) {
+                emailMessage.append(String.format("Asset Type: %s, Available Assets: %d\n", 
+                    stats.getAssetType().getName(), stats.getAvailableAssets()));
+            }
     
-            // Get all admins and prepare the message
             List<Admin> allAdmins = this.adminRepository.findAll();
-            String emailMessage = "DEAR ADMIN, PLEASE CHECK YOUR STOCK AS IT IS ALMOST EMPTY. GREETINGS FROM THE CANAL SUGAR ASSET MANAGEMENT WEBSITE.";
     
             for (Admin admin : allAdmins) {
+                MimeMessage message = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true);
+                
+                // Set the individual fields for each email
+                helper.setFrom("tabibii.application@gmail.com");
                 helper.setTo(admin.getEmail());
-                helper.setText(String.format(emailMessage, admin.getFirstname()));
+                helper.setSubject("STOCK WARNING!!!!!");
+                helper.setText(String.format("DEAR %s, \n\n%s\n\n Greetings from the Canal Sugar Asset Management Website.", 
+                    admin.getFirstname(), emailMessage.toString()));
     
                 // Send email
                 mailSender.send(message);
@@ -213,5 +240,26 @@ public class AssetsController {
             System.out.println("Error while sending mail.");
         }
     }
+    
+
+
+    private List<AssetStat> getAssetStatistics() {
+        List<AssetType> assetTypes = assetTypeRepository.findAll();
+        List<AssetStat> assetStatisticsList = new ArrayList<>();
+    
+        for (AssetType assetType : assetTypes) {
+            long totalAssets = assetRepository.countByAssetType(assetType);
+            long usedAssets = assignedAssetRepository.countByAsset_AssetType(assetType);
+            long availableAssets = totalAssets - usedAssets;
+    
+            if (availableAssets < 4) {
+                AssetStat stats = new AssetStat(assetType, totalAssets, usedAssets, availableAssets);
+                assetStatisticsList.add(stats);
+            }
+        }
+        
+        return assetStatisticsList;
+    }
+    
     
 }

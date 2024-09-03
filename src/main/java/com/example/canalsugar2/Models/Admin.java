@@ -17,7 +17,7 @@ import java.util.Objects;
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int AdminID;
+    private int adminID;
 
       @Email
     @NotEmpty(message = "email cannot be empty ")
@@ -44,7 +44,7 @@ public class Admin {
     }
 
     public Admin(int AdminID, String email, String pass, String firstname, String lastname, String number) {
-        this.AdminID = AdminID;
+        this.adminID = AdminID;
         this.email = email;
         this.pass = pass;
         this.firstname = firstname;
@@ -53,7 +53,7 @@ public class Admin {
     }
 
     public int getAdminID() {
-        return this.AdminID;
+        return this.adminID;
     }
     public Admin getAdmin()
     {
@@ -61,7 +61,7 @@ public class Admin {
     }
 
     public void setAdminID(int AdminID) {
-        this.AdminID = AdminID;
+        this.adminID = AdminID;
     }
 
     public String getEmail() {
@@ -134,32 +134,5 @@ public class Admin {
         return this;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof Admin)) {
-            return false;
-        }
-        Admin admin = (Admin) o;
-        return AdminID == admin.AdminID && Objects.equals(email, admin.email) && Objects.equals(pass, admin.pass) && Objects.equals(firstname, admin.firstname) && Objects.equals(lastname, admin.lastname) && Objects.equals(number, admin.number);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(AdminID, email, pass, firstname, lastname, number);
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-            " AdminID='" + getAdminID() + "'" +
-            ", email='" + getEmail() + "'" +
-            ", pass='" + getPass() + "'" +
-            ", firstname='" + getFirstname() + "'" +
-            ", lastname='" + getLastname() + "'" +
-            ", number='" + getNumber() + "'" +
-            "}";
-    }
     
 }

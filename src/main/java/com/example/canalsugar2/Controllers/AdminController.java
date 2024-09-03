@@ -273,7 +273,14 @@ public class AdminController {
     }
 
 
-
+    @GetMapping("deleteadmin/{AdminID}")
+    @Transactional
+    public RedirectView deleteAssetType(@PathVariable Integer AdminID) {
+        AssetType currAssetType=this.assetTypeRepository.findByAssettypeid(AdminID);
+        Admin currAdmin=this.adminRepository.findByAdminID(AdminID);
+        this.adminRepository.delete(currAdmin);
+        return new RedirectView("/admin/viewAdmins");
+    }
     
 
     @GetMapping("/stock")

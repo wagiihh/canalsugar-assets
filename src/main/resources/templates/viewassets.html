@@ -1,33 +1,46 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>View Assets</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-    <link rel="stylesheet" href="../css/admin.css">
-</head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script> 
 
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
 <style>
     body {
         background-image: url('../images/white.jpg');
         background-position: center;
         background-size: contain;
-        margin-top: 50px; /* Adjust margin to account for the top bar */
+        margin-top: 50px;
+        /* Adjust margin to account for the top bar */
     }
-    
+
     /* Sidebar and Top Bar Styles */
     .top-bar {
-        width: calc(100% - 250px); /* Adjust to fit the sidebar width */
-        height: 50px; /* Height of the top bar */
-        background-color: #f4f4f4; /* Background color of the top bar */
-        color: #fff; /* Text color */
+        width: calc(100% - 250px);
+        /* Adjust to fit the sidebar width */
+        height: 50px;
+        /* Height of the top bar */
+        background-color: #f4f4f4;
+        /* Background color of the top bar */
+        color: #fff;
+        /* Text color */
         position: fixed;
         top: 0;
-        left: 250px; /* Start after the sidebar */
-        z-index: 1000; /* Ensure it is above other content */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+        left: 250px;
+        /* Start after the sidebar */
+        z-index: 1000;
+        /* Ensure it is above other content */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        /* Optional shadow for better visibility */
     }
 
     .sidebar {
@@ -40,7 +53,8 @@
         border-right: 1px solid #ddd;
         padding: 20px;
         box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        z-index: 999; /* Ensure sidebar is below the top bar */
+        z-index: 999;
+        /* Ensure sidebar is below the top bar */
     }
 
     .sidebar a {
@@ -48,13 +62,14 @@
         padding: 10px;
         margin-bottom: 10px;
         color: #333;
-        text-decoration: none; /* Changed from 'solid' to 'none' */
+        text-decoration: none;
+        /* Changed from 'solid' to 'none' */
         border-radius: 4px;
-        transition: background-color 0.3s, color 0.3s; 
+        transition: background-color 0.3s, color 0.3s;
     }
 
     .sidebar a:hover {
-        background-color: #165d0a; 
+        background-color: #165d0a;
         color: #ffffff;
     }
 
@@ -63,7 +78,7 @@
         position: relative;
         width: 1170px;
         margin: 20px;
-        left: 270px; 
+        left: 270px;
         margin-left: 40px;
         border: 2px solid rgb(242, 230, 230);
         top: 50px;
@@ -166,29 +181,44 @@
 
     /* Style for the select dropdown */
     #assetTypeFilter {
-        width: 200px;  /* Adjusted width */
-        padding: 8px 12px;  /* Add padding for a comfortable feel */
-        font-size: 16px;  /* Increase font size */
-        color: #0a4521;  /* Text color */
-        background-color: #f0f0f0;  /* Light background color */
-        border: 2px solid #0a4521;  /* Border color matching the theme */
-        border-radius: 8px;  /* Rounded corners */
-        outline: none;  /* Remove default outline */
-        cursor: pointer;  /* Change cursor to pointer */
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);  /* Subtle shadow for depth */
-        transition: all 0.3s ease;  /* Smooth transition for hover effects */
+        width: 200px;
+        /* Adjusted width */
+        padding: 8px 12px;
+        /* Add padding for a comfortable feel */
+        font-size: 16px;
+        /* Increase font size */
+        color: #0a4521;
+        /* Text color */
+        background-color: #f0f0f0;
+        /* Light background color */
+        border: 2px solid #0a4521;
+        /* Border color matching the theme */
+        border-radius: 8px;
+        /* Rounded corners */
+        outline: none;
+        /* Remove default outline */
+        cursor: pointer;
+        /* Change cursor to pointer */
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        /* Subtle shadow for depth */
+        transition: all 0.3s ease;
+        /* Smooth transition for hover effects */
     }
 
     /* Hover effect for the select dropdown */
     #assetTypeFilter:hover {
-        background-color: #e0e0e0;  /* Slightly darker background on hover */
-        border-color: #165d0a;  /* Darker border on hover */
+        background-color: #e0e0e0;
+        /* Slightly darker background on hover */
+        border-color: #165d0a;
+        /* Darker border on hover */
     }
 
     /* Focus effect for the select dropdown */
     #assetTypeFilter:focus {
-        border-color: #008000;  /* Green border when focused */
-        background-color: #ffffff;  /* White background when focused */
+        border-color: #008000;
+        /* Green border when focused */
+        background-color: #ffffff;
+        /* White background when focused */
     }
 
     /* Add additional padding and space for the dropdown options */
@@ -198,7 +228,6 @@
         color: #0a4521;
     }
 </style>
-
 <body>
     <!-- Navigation Sidebar -->
     <div th:insert="navigation"></div>
@@ -246,6 +275,21 @@
                 </tr>
             </tbody>
         </table>
+
+        <!-- Export Options -->
+        <div class="export__file">
+            <h2>Export Options:</h2>
+            <div class="export__file-options">
+                <label class="export__file-btn" onclick="exportToCSV()">Export to CSV</label>
+                <br>
+                <label class="export__file-btn" onclick="exportToExcel()">Export to Excel</label>
+                <br>
+                <label class="export__file-btn" id="toPDF">Export to PDF</label>
+                <br>
+
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -253,24 +297,24 @@
             const searchTerm = document.getElementById('searchBar').value.toLowerCase();
             const selectedType = document.getElementById('assetTypeFilter').value.toLowerCase();
             const rows = document.querySelectorAll('#assetTableBody tr');
-
-            rows.forEach(function(row) {
+    
+            rows.forEach(function (row) {
                 const assetType = row.querySelector('.assetTypeCell').textContent.toLowerCase();
                 const assetID = row.cells[1].textContent.toLowerCase();
                 const assetName = row.cells[2].textContent.toLowerCase();
                 const assetSerial = row.cells[3].textContent.toLowerCase();
                 const assetModel = row.cells[4].textContent.toLowerCase();
-
+    
                 // Check if the row matches the search term
                 const matchesSearch = assetType.includes(searchTerm) ||
-                                      assetID.includes(searchTerm) ||
-                                      assetName.includes(searchTerm) ||
-                                      assetSerial.includes(searchTerm) ||
-                                      assetModel.includes(searchTerm);
-
+                    assetID.includes(searchTerm) ||
+                    assetName.includes(searchTerm) ||
+                    assetSerial.includes(searchTerm) ||
+                    assetModel.includes(searchTerm);
+    
                 // Check if the row matches the selected asset type
                 const matchesType = (selectedType === 'all') || (assetType === selectedType);
-
+    
                 // Display the row only if it matches both search and type filters
                 if (matchesSearch && matchesType) {
                     row.style.display = '';
@@ -279,6 +323,95 @@
                 }
             });
         }
+    
+        function exportToCSV() {
+            const rows = document.querySelectorAll('#assetTableBody tr');
+            let csv = [];
+            
+            // Extract the headers
+            let headers = Array.from(document.querySelectorAll('thead th:not(:last-child)'))
+                .map(header => header.innerText);
+            csv.push(headers.join(','));
+    
+            // Extract visible rows
+            rows.forEach(function (row) {
+                if (row.style.display !== 'none') {
+                    let cols = Array.from(row.querySelectorAll('td:not(:last-child)'))
+                        .map(col => col.innerText);
+                    csv.push(cols.join(','));
+                }
+            });
+    
+            let csvFile = new Blob([csv.join('\n')], { type: 'text/csv' });
+            saveAs(csvFile, 'assets.csv');
+        }
+    
+        function exportToExcel() {
+            let html = '<table border="1" cellspacing="0" cellpadding="5"><thead><tr>';
+            
+            // Get the headers
+            let headers = Array.from(document.querySelectorAll('thead th:not(:last-child)'))
+                .map(header => `<th>${header.innerText}</th>`).join('');
+            html += headers + '</tr></thead><tbody>';
+            
+            // Get the rows
+            document.querySelectorAll('#assetTableBody tr').forEach(row => {
+                if (row.style.display !== 'none') {
+                    let cells = Array.from(row.querySelectorAll('td:not(:last-child)'))
+                        .map(cell => `<td>${cell.innerText}</td>`).join('');
+                    html += `<tr>${cells}</tr>`;
+                }
+            });
+    
+            html += '</tbody></table>';
+    
+            let excelFile = new Blob([html], { type: 'application/vnd.ms-excel' });
+            saveAs(excelFile, 'assets.xls');
+        }
+    
+        function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Initialize the table data
+    let data = [];
+    let headers = [];
+
+    // Extract the headers
+    headers = Array.from(document.querySelectorAll('thead th:not(:last-child)'))
+        .map(header => header.innerText);
+    data.push(headers);
+
+    // Extract visible rows
+    const rows = document.querySelectorAll('#assetTableBody tr');
+    rows.forEach(function (row) {
+        if (row.style.display !== 'none') {
+            let cols = Array.from(row.querySelectorAll('td:not(:last-child)'))
+                .map(col => col.innerText);
+            data.push(cols);
+        }
+    });
+
+    // Use autoTable to add the table to the PDF
+    doc.autoTable({
+        head: [data[0]],
+        body: data.slice(1),
+        styles: {
+            fontSize: 8, // adjust font size
+        }
+    });
+
+    // Save the PDF
+    doc.save('assets.pdf');
+}
+
+const pdf_btn = document.querySelector('#toPDF');
+pdf_btn.onclick = () => {
+    exportToPDF();
+};
+
     </script>
+    
 </body>
+
 </html>

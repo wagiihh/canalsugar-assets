@@ -127,7 +127,7 @@ public class AdminController {
             adminedit.setNumber(number);
             this.adminRepository.save(adminedit);
 
-            return new RedirectView("/admin/home");
+            return new RedirectView("/admin/Profile");
         }
         return new RedirectView("/admin/editprofile?error=incorrectForm");
 
@@ -167,7 +167,7 @@ public class AdminController {
         } else {
             User user = newUser.getUser();
             this.userRepository.save(user);
-            return new ModelAndView("redirect:/admin/home");
+            return new ModelAndView("redirect:/admin/viewUsers");
 
         }
     }

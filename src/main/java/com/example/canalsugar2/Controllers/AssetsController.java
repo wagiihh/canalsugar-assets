@@ -174,7 +174,44 @@ public class AssetsController {
     public RedirectView deleteAppointment(@PathVariable Integer assetid) {
         Asset asset=this.assetRepository.findByAssetid(assetid);
         this.assetRepository.delete(asset);
-
+        sendStockWarning();
         return new RedirectView("/asset/viewassets");
     }
+
+    public void sendStockWarning() {
+        // Using the injected mailSender
+        if (mailSender == null) {
+            System.out.println("MailSender is not configured");
+            return;
+        }
+    
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+    
+            // Set the common fields
+            helper.setFrom("tabibii.application@gmail.com");
+            helper.setSubject("STOCK WARNING!!!!!");
+    
+            // Get all admins and prepare the message
+            List<Admin> allAdmins = this.adminRepository.findAll();
+            String emailMessage = "DEAR ADMIN, PLEASE CHECK YOUR STOCK AS IT IS ALMOST EMPTY. GREETINGS FROM THE CANAL SUGAR ASSET MANAGEMENT WEBSITE.";
+    
+            for (Admin admin : allAdmins) {
+                helper.setTo(admin.getEmail());
+                helper.setText(String.format(emailMessage, admin.getFirstname()));
+    
+                // Send email
+                mailSender.send(message);
+                System.out.println("Mail sent to admin: " + admin.getEmail());
+            }
+    
+            System.out.println("All emails sent successfully.");
+    
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            System.out.println("Error while sending mail.");
+        }
+    }
+    
 }

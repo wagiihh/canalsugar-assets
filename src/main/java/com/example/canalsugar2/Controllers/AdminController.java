@@ -137,6 +137,7 @@ public class AdminController {
             @RequestParam("lastname") String lastname,
             @RequestParam("number") String number) {
                 
+                
         Admin adminedit = this.adminRepository.findByEmail((String) session.getAttribute("email"));
         if (adminedit != null) {
             session.setAttribute("Firstname", firstname);
@@ -190,6 +191,15 @@ public class AdminController {
         ModelAndView SignupModel = new ModelAndView("adduser.html");
         ModelAndView refresh = new ModelAndView("CSHOME.html");
 
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView("signup.html");
+            mav.addObject("newUser", newUser);
+            Department department = new Department();
+            List<Department> departments = departmentRepository.findAll();
+            mav.addObject("departments", departments);
+            return mav;
+        }
+    
         User existingUser = userRepository.findByEmail(newUser.getEmail());
 
         if (existingUser != null) {
@@ -444,6 +454,7 @@ public class AdminController {
         // }
         
         // oldDepartment.setDepartmentID(departmentID);
+       
         Department newDepartment=this.departmentRepository.findByDepartmentID(departmentID);
         System.out.println(newDepartment.getDepartmentname());
         newDepartment.setDepartmentname(oldDepartment.getDepartmentname());

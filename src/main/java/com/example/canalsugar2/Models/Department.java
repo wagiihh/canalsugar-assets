@@ -17,16 +17,16 @@ public class Department {
     private int departmentID;
 
     @NotBlank(message = "Department name is required")
-    @Column(name = "Departmentname")
-    private String Departmentname;
+    @Column(name = "departmentname")
+    private String departmentname;
 
 
     public Department() {
     }
 
-    public Department(int departmentID, String Departmentname) {
+    public Department(int departmentID, String departmentname) {
         this.departmentID = departmentID;
-        this.Departmentname = Departmentname;
+        this.departmentname = departmentname;
     }
 
     public int getDepartmentID() {
@@ -37,12 +37,17 @@ public class Department {
         this.departmentID = departmentID;
     }
 
-    public String getDepartmentname() {
-        return this.Departmentname;
+    public Department getDepartment()
+    {
+        return this;
     }
 
-    public void setDepartmentname(String Departmentname) {
-        this.Departmentname = Departmentname;
+    public String getDepartmentname() {
+        return this.departmentname;
+    }
+
+    public void setDepartmentname(String departmentname) {
+        this.departmentname = departmentname;
     }
 
     public Department departmentID(int departmentID) {
@@ -55,29 +60,7 @@ public class Department {
         return this;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof Department)) {
-            return false;
-        }
-        Department department = (Department) o;
-        return departmentID == department.departmentID && Objects.equals(Departmentname, department.Departmentname);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(departmentID, Departmentname);
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-            " departmentID='" + getDepartmentID() + "'" +
-            ", Departmentname='" + getDepartmentname() + "'" +
-            "}";
-    }
+   
     
     
 }

@@ -1,7 +1,7 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title> VIEW ASSET TYPES </title>
+    <title> VIEW DEPARTMENTS </title>
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
@@ -17,8 +17,7 @@
         background-position: center;
         background-size: contain;
         margin-top: 50px; /* Adjust margin to account for the top bar */
-    }
-    .modal {
+        .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1001; /* Sit on top */
@@ -86,6 +85,9 @@
     justify-content: center;
     align-items: center;
 }
+
+    }
+
  
 </style>
 <body>
@@ -97,26 +99,26 @@
     <div class="view" >
 
     
-   <h1 id="h1h1">CANAL SUGAR ASSET TYPES:  </h1>
+   <h1 id="h1h1">CANAL SUGAR DEPARTMENTS:  </h1>
 
    <table class="table table-dark">
     <thead>
       <tr>
-        <th>ASSET TYPE ID</th>
-        <th >ASSET TYPE NAME</th>
+        <th>DEPARTMENT ID</th>
+        <th >DEPARTMENT NAME</th>
         <th >ACTIONS</th>
         
       </tr>
     </thead>
     <tbody>
-      <tr th:each="asset : ${assetTypes}" >
+      <tr th:each="department : ${departments}" >
         
-        <td th:text="${asset.assettypeid}"></td>
-        <td th:text="${asset.name}"></td>
+        <td th:text="${department.departmentID}"></td>
+        <td th:text="${department.departmentname}"></td>
 <td>
-    <a id="edit"    th:href="@{'editassettype/' + ${asset.assettypeid}}">EDIT</a>
+    <a id="edit"    th:href="@{'editdepartment/' + ${department.departmentID}}">EDIT</a>
     ||
-    <a id="delete"  th:href="@{'deleteassettype/' + ${asset.assettypeid}}">DELETE</a>
+    <a id="delete"  th:href="@{'deletedepartment/' + ${department.departmentID}}">DELETE</a>
 </td>
       </tr>
       
@@ -125,15 +127,47 @@
   <div id="deleteModal" class="modal">
     <div class="modal-content">
         <h2>Confirm Deletion</h2>
-        <p>This asset type deletion might delete other records</p>
+        <p>This department deletion might delete other records</p>
         <div class="modal-actions">
             <button id="confirmDelete">Proceed and Delete</button>
             <button id="cancelDelete">Cancel</button>
         </div>
     </div>
 </div>
+
 </div>
 </body>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const deleteLinks = document.querySelectorAll('#delete');
+    const modal = document.getElementById('deleteModal');
+    const confirmDeleteBtn = document.getElementById('confirmDelete');
+    const cancelDeleteBtn = document.getElementById('cancelDelete');
+    let deleteUrl = '';
+
+    deleteLinks.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            deleteUrl = this.href; // Store the delete URL
+            modal.style.display = 'flex'; // Show the modal
+        });
+    });
+
+    confirmDeleteBtn.addEventListener('click', function() {
+        window.location.href = deleteUrl; // Navigate to the delete URL
+    });
+
+    cancelDeleteBtn.addEventListener('click', function() {
+        modal.style.display = 'none'; 
+    });
+
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+});
+</script>
 <style>
 
 
@@ -213,35 +247,5 @@ table.table tbody td {
     text-align: center;  /* Center-align data cell text */
 }
 </style>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const deleteLinks = document.querySelectorAll('#delete');
-    const modal = document.getElementById('deleteModal');
-    const confirmDeleteBtn = document.getElementById('confirmDelete');
-    const cancelDeleteBtn = document.getElementById('cancelDelete');
-    let deleteUrl = '';
 
-    deleteLinks.forEach(function(link) {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
-            deleteUrl = this.href; // Store the delete URL
-            modal.style.display = 'flex'; // Show the modal
-        });
-    });
-
-    confirmDeleteBtn.addEventListener('click', function() {
-        window.location.href = deleteUrl; // Navigate to the delete URL
-    });
-
-    cancelDeleteBtn.addEventListener('click', function() {
-        modal.style.display = 'none'; 
-    });
-
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    };
-});
-</script>
 </html>

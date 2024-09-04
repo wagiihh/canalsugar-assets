@@ -309,6 +309,78 @@ public class AdminController {
         return mav;
     }
 
+    @GetMapping("/addDepartment")
+    public ModelAndView DepartmentForm() {
+        ModelAndView mav = new ModelAndView("addDepartment");
+        Department newDepartment=new Department();
+        mav.addObject("newDepartment", newDepartment);
+        return mav;
+    }
+    @PostMapping("addDepartment")
+    public ModelAndView processSignupForm(@Valid @ModelAttribute("newDepartment") Department newDepartment, BindingResult result) {
+        ModelAndView SignupModel = new ModelAndView("addDepartment");
+        ModelAndView refresh = new ModelAndView("CSHOME.html");
+        System.out.println("------------------d--ddd--------ddd-"+newDepartment.getDepartmentname());
+        Department department=newDepartment.getDepartment();
+        department.setDepartmentname(newDepartment.getDepartmentname());
+        Department existingDepartment=departmentRepository.findByDepartmentname(newDepartment.getDepartmentname());
+        if (result.hasErrors()) {
+            return new ModelAndView("redirect:/admin/addDepartment");
+        }
+        if (existingDepartment != null) {
+            return SignupModel;
+        } else {
+
+            this.departmentRepository.save(department);
+            return new ModelAndView("redirect:/admin/viewDepartments");
+
+        }
+    }
+
+    @GetMapping("/viewDepartments")
+    public ModelAndView viewDepartmentsForm() {
+        ModelAndView mav = new ModelAndView("viewDepartments");
+        List<Department> departments=departmentRepository.findAll();
+        mav.addObject("departments", departments);
+        return mav;
+    }
+    @GetMapping("editdepartment/{departmentID}")
+    public ModelAndView editDepartment(@PathVariable Integer departmentID, HttpSession session) {
+        ModelAndView mav = new ModelAndView("editdepartment");
+        Department oldDepartment = this.departmentRepository.findByDepartmentID(departmentID);
+        System.out.println("-------------------------------------the department sent in the edit form :" + departmentID);
+        mav.addObject("oldDepartment", oldDepartment);
+        return mav;
+    }
+    
+    @PostMapping("editdepartment/{departmentID}")
+    public ModelAndView editDepartmentForm(@ModelAttribute("oldDepartment") Department oldDepartment, 
+                                           BindingResult bindingResult, 
+                                           @PathVariable Integer departmentID) {
+        // if (bindingResult.hasErrors()) {
+        //     ModelAndView mav = new ModelAndView("editdepartment");
+        //     mav.addObject("oldDepartment", oldDepartment);
+        //     return mav;
+        // }
+        
+        // oldDepartment.setDepartmentID(departmentID);
+        Department newDepartment=this.departmentRepository.findByDepartmentID(departmentID);
+        System.out.println(newDepartment.getDepartmentname());
+        newDepartment.setDepartmentname(oldDepartment.getDepartmentname());
+        this.departmentRepository.save(newDepartment);
+        return new ModelAndView("redirect:/admin/viewDepartments");
+    }
+    
+    
+
+    @GetMapping("deletedepartment/{departmentID}")
+    @Transactional
+    public RedirectView deleteDepartment(@PathVariable Integer departmentID) {
+        Department currDepartment=this.departmentRepository.findByDepartmentID(departmentID);
+        this.departmentRepository.delete(currDepartment);
+        return new RedirectView("/admin/viewDepartments");
+    }
+
     @GetMapping("/Login")
     public ModelAndView Login() {
         ModelAndView mav = new ModelAndView("Login.html");

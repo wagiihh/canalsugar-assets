@@ -139,7 +139,6 @@ public class AssignedAssetController {
             if (asset != null) {
                 oldAssigned.setAsset(asset);
             } else {
-                // Handle case where asset is not found
                 mav.setViewName("errorPage"); // Example: redirecting to an error page.
                 mav.addObject("message", "Asset not found.");
                 return mav;
@@ -157,21 +156,17 @@ public class AssignedAssetController {
         
     @PostMapping("editassigned/{asid}")
     public RedirectView updateAssigned(@ModelAttribute("oldAssigned") AssignedAsset oldAssigned, @PathVariable Integer asid) {
-        // Fetch the existing AssignedLaptops object from the database to ensure it's managed
         AssignedAsset existingAssigned = assignedAssetsRepository.findByAsid(asid);
         
         if (existingAssigned == null) {
             throw new IllegalArgumentException("Assigned Asset not found");
         }
     
-        // Fetch the User from the database based on the ID in oldAssigned
         User user = userRepository.findById(oldAssigned.getUser().getUserID())
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         
-        // Update only the modifiable fields
         existingAssigned.setUser(user);
         
-        // Save the updated AssignedLaptops object
         this.assignedAssetsRepository.save(existingAssigned);
         
         return new RedirectView("/assigned/viewassigned");
@@ -237,7 +232,6 @@ public ModelAndView showAssignAssetForm(@PathVariable Integer assetid) {
     return mav;
 }
 
-// POST method to handle the form submission
 
     @PostMapping("/assignasset/{assetid}")
     public RedirectView assignAsset(@ModelAttribute("newAssignment") AssignedAsset newAssignment,
@@ -253,14 +247,11 @@ public ModelAndView showAssignAssetForm(@PathVariable Integer assetid) {
             throw new IllegalArgumentException("Asset not found");
         }
 
-        // Set the user and asset to the new assignment
         newAssignment.setUser(user);
         newAssignment.setAsset(asset);
 
-        // Save the assignment
         assignedAssetsRepository.save(newAssignment);
 
-        // Publish the event
         eventPublisher.publishEvent(new AssetAssignedEvent(this, assetid, userId));
 
 
@@ -277,7 +268,6 @@ public ModelAndView showAssignAssetForm(@PathVariable Integer assetid) {
         try {
             List<AssetStat> assetStatisticsList = getAssetStatistics();
             
-            // Prepare the email message with asset statistics
             StringBuilder emailMessage = new StringBuilder();
             emailMessage.append("PLEASE CHECK THE STOCK FOR THE FOLLOWING ASSET TYPES AS THEY ARE ALMOST EMPTY:\n\n");
     
@@ -292,14 +282,12 @@ public ModelAndView showAssignAssetForm(@PathVariable Integer assetid) {
                 MimeMessage message = mailSender.createMimeMessage();
                 MimeMessageHelper helper = new MimeMessageHelper(message, true);
                 
-                // Set the individual fields for each email
                 helper.setFrom("tabibii.application@gmail.com");
                 helper.setTo(admin.getEmail());
                 helper.setSubject("STOCK WARNING!!!!!");
                 helper.setText(String.format("Dear %s, \n\n%s\n\n Greetings from the Canal Sugar Asset Management Website.", 
                     admin.getFirstname(), emailMessage.toString()));
     
-                // Send email
                 mailSender.send(message);
                 System.out.println("Mail sent to admin: " + admin.getEmail());
             }

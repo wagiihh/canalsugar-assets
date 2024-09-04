@@ -12,7 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        .top-bar{
+        .top-bar {
             margin-left: 1800px;
         }
 
@@ -29,7 +29,8 @@
             margin-right: 300px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 15px;
         }
 
@@ -47,16 +48,19 @@
             align-items: center;
             flex-direction: column;
         }
+
         .target-vs-sales--container {
-    background-image: url(../images/Sugar-factory.jpg);
-    background-size:cover;
-    background-position:center;
-    padding: 20px;
-}
-.sidebar{
-    margin-right: 100px;
-    padding-right: 100px;
-}
+            background-size:cover;
+            background-position: center;
+            padding: 20px;
+            width: 95%;
+            height: 350px;
+        }
+
+        .sidebar {
+            margin-right: 100px;
+            padding-right: 100px;
+        }
     </style>
     <title>Canal Sugar</title>
 </head>
@@ -64,33 +68,20 @@
 <body class="body">
     <div th:insert="navigation"></div>
 
-
     <div class="main--container">
-        <div class="target-vs-sales--container">
-            <div class="section--title">
-                <div class="sales--value">
-                    <h3 class="uppercase-text">Welcome  <span th:text="${FNAME}"></span>!</h3>
-
-                    <h3>Channel a supplier Here</h3>
-
-                    <form th:action="@{/admin/searchlaptops}" method="GET">
-                        <input type="search" name="search" class="input-text"
-                            placeholder="Search supplier"
-                            style="width:45%;">
-                        <input type="Submit" value="Search" class="login-btn btn-primary btn"
-                            style="padding-left: 25px; padding-right: 25px; padding-top: 10px; padding-bottom: 10px;">
-                    </form>
-                </div>
+        <div class="section--title">
+            <div class="sales--value">
+                <h3 class="uppercase-text">Welcome <span th:text="${FNAME}"></span>!</h3>
             </div>
+        </div>
+        <div class="target-vs-sales--container" id="imageSlider">
             <div class="target--vs--sales">
                 <canvas id="tarsale"></canvas>
             </div>
         </div>
         <div class="table">
             <div class="section--title">
-                <h3 class="title">Upcoming Sessions</h3>
-                   
-               
+                <h3 class="title">Recently Added Assets</h3>
             </div>
         </div>
     </div>
@@ -100,6 +91,30 @@
     <script src="assets/js/products.js"></script>
     <script src="assets/js/customers.js"></script>
     <script src="assets/js/tarsale.js"></script>
+
+    <script>
+        const imageSlider = document.getElementById('imageSlider');
+        const images = [
+            '../images/Factory.jpg',
+            '../images/cslogo.jpeg',
+            '../images/cstruck.png',
+            '../images/Sugar-factory.jpg',
+            // '../images/Sugar-storage.jpg'
+        ];
+
+        let currentIndex = 0;
+
+        function changeImage() {
+            imageSlider.style.backgroundImage = `url(${images[currentIndex]})`;
+            currentIndex = (currentIndex + 1) % images.length;
+        }
+
+        // Initial image setup
+        changeImage();
+
+        // Change image every 5 seconds (5000 milliseconds)
+        setInterval(changeImage, 5000);
+    </script>
     <footer></footer>
 </body>
 

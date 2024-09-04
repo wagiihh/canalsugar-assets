@@ -263,7 +263,7 @@ public ModelAndView showAssignAssetForm(@PathVariable Integer assetid,HttpSessio
 
 
     @PostMapping("/assignasset/{assetid}")
-    public RedirectView assignAsset(@ModelAttribute("newAssignment") AssignedAsset newAssignment,
+    public RedirectView assignAsset(@Valid @ModelAttribute("newAssignment") AssignedAsset newAssignment,
                                     @RequestParam("userId") Integer userId,
                                     @PathVariable Integer assetid) {
         User user = userRepository.findByUserID(userId);

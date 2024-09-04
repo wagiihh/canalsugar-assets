@@ -247,7 +247,7 @@ public class AdminController {
     }
 
     @PostMapping("edit/{userID}")
-    public RedirectView updateAppointment(@ModelAttribute("oldUser") User oldUser, @PathVariable Integer userID) {
+    public RedirectView updateAppointment(@Valid@ModelAttribute("oldUser") User oldUser, @PathVariable Integer userID,BindingResult result) {
         oldUser.setUserID(userID);
         this.userRepository.save(oldUser);
         return new RedirectView("/admin/viewUsers");
@@ -280,7 +280,6 @@ public class AdminController {
             return mav;
         }
         ModelAndView mav = new ModelAndView("addadmin.html");
-        User newUser = new User();
         Admin newAdmin=new Admin();
         mav.addObject("newAdmin", newAdmin);
         return mav;
@@ -307,6 +306,11 @@ public class AdminController {
     
         if (newAdmin.getPass().isEmpty()) {
             result.rejectValue("pass", "error.patient", "Password is required.");
+        }
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView("addadmin");
+            mav.addObject("newAdmin", newAdmin);
+            return mav;
         }
         Admin existingAdmin=adminRepository.findByEmail(newAdmin.getEmail());
 
@@ -405,7 +409,9 @@ public class AdminController {
         department.setDepartmentname(newDepartment.getDepartmentname());
         Department existingDepartment=departmentRepository.findByDepartmentname(newDepartment.getDepartmentname());
         if (result.hasErrors()) {
-            return new ModelAndView("redirect:/admin/addDepartment");
+            ModelAndView mav = new ModelAndView("addDepartment");
+            mav.addObject("newDepartment", newDepartment);
+            return mav;
         }
         if (existingDepartment != null) {
             return SignupModel;

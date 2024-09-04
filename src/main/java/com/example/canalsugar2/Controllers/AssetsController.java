@@ -91,7 +91,11 @@ public class AssetsController {
     public ModelAndView processSignupForm(@Valid @ModelAttribute("newAssetType") AssetType newAssetType, BindingResult result) {
         ModelAndView SignupModel = new ModelAndView("addAssetType.html");
         ModelAndView refresh = new ModelAndView("CSHOME.html");
-
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView("addAssetType");
+            mav.addObject("newAssetType", newAssetType);
+            return mav;
+        }
         AssetType existingAssetType=assetTypeRepository.findByName(newAssetType.getName());
         if (result.hasErrors()) {
             return new ModelAndView("redirect:/admin/addAssetType");
@@ -125,10 +129,19 @@ public class AssetsController {
     public ModelAndView processAssetForm(@Valid @ModelAttribute("newAsset") Asset newAsset, BindingResult result) {
         ModelAndView SignupModel = new ModelAndView("addAsset");
         ModelAndView refresh = new ModelAndView("CSHOME.html");
-
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView("addAsset");
+            mav.addObject("newAsset", newAsset);
+            List<AssetType> assetTypes = assetTypeRepository.findAll();
+            mav.addObject("assetTypes", assetTypes);
+            return mav;
+        }
         Asset existingAsset=assetRepository.findByAssetserial(newAsset.getAssetserial());
 
         if (existingAsset != null) {
+            List<AssetType> assetTypes = assetTypeRepository.findAll();
+            SignupModel.addObject("assetTypes", assetTypes);
+            SignupModel.addObject("ErrorMessage", "Asset already exists with this Serial Number. Please review the details or choose a different Serial Number.");
             return SignupModel;
         } else {
             Asset asset=newAsset.getAsset();

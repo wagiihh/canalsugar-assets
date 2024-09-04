@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
 
@@ -18,11 +19,13 @@ public class AssignedAsset {
     private int asid;
 
     @NotNull
+    @Valid
     @ManyToOne
     @JoinColumn(name = "assetid", referencedColumnName = "assetid", insertable = true, updatable = true)
     private Asset asset;
 
     @NotNull
+    @Valid
     @ManyToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID", insertable = true, updatable = true)
     private User user;

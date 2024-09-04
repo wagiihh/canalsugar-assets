@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.Objects;
@@ -32,6 +33,7 @@ public class Asset {
     private String assetname;
 
     @NotNull
+    @Valid
     @ManyToOne
     @JoinColumn(name = "assettypeid", referencedColumnName = "assettypeid", insertable = true, updatable = true)
     private AssetType assetType;

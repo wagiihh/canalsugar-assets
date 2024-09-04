@@ -85,6 +85,9 @@
         padding-top: 10px;
         /* Add some padding at the top if needed */
     }
+    span{
+        color: red;
+    }
 </style>
 
 <body>
@@ -98,8 +101,8 @@
                 <form th:action="@{/admin/addDepartment}" th:object="${newDepartment}" method="post">
                     <div class="form-group">
                         <label for="name">Department Name:</label>
-                        <input type="text" class="form-control" id="departmentname" th:field="*{departmentname}" placeholder="Department Name" required>
-                        <div th:if="${#fields.hasErrors('departmentname')}" th:errors="*{departmentname}">Department name is required</div>
+                        <input type="text" class="form-control" id="departmentname" th:field="*{departmentname}" placeholder="Department Name" >
+                        <span th:if="${#fields.hasErrors('departmentname')}" th:errors="*{departmentname}"></span>
                     </div>
                     <button id="submit" type="submit" class="btn btn-primary" name="submit">ADD</button>
                 </form>

@@ -111,6 +111,82 @@
         background-color: #ffffff;
         color: #0a4521;
     }
+    #exportModal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+.export-modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
+    text-align: center; /* Center the text inside the modal */
+}
+
+.export-modal-content h2 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+.export-modal-content button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    display: block;
+    width: 100%;
+    color: #ffffff;
+}
+
+.export-modal-content button#exportCSV {
+    background-color: #007bff;
+}
+
+.export-modal-content button#exportExcel {
+    background-color: #28a745;
+}
+
+.export-modal-content button#exportPDF {
+    background-color: #dc3545;
+}
+
+.export-modal-content button:hover {
+    opacity: 0.9;
+}
+
+#closeModal {
+    background-color: #6c757d;
+    color: #ffffff;
+    margin-top: 10px;
+}
+#openn{
+    background-color: green;
+    color: white;
+    border: 2px solid #0a4521;
+        /* Border color matching the theme */
+        border-radius: 8px;
+        /* Rounded corners */
+        outline: none;
+        /* Remove default outline */
+        cursor: pointer;
+        /* Change cursor to pointer */
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    
+}
 </style>
 <body>
     <div th:insert="navigation"></div>
@@ -155,21 +231,52 @@
                 </tr>
             </tbody>
         </table>
-        <div class="export__file">
-            <h2>Export Options:</h2>
-            <div class="export__file-options">
-                <label class="export__file-btn" onclick="exportToCSV()">Export to CSV</label>
-                <br>
-                <label class="export__file-btn" onclick="exportToExcel()">Export to Excel</label>
-                <br>
-                <label class="export__file-btn" id="toPDF">Export to PDF</label>
-                <br>
 
-            </div>
-        </div>
+                <button id="openn" onclick="openExportModal()">Open Export Modal</button>
+
+                <div id="exportModal" class="file-type-modal">
+                    <div class="export-modal-content">
+                        <h2>Select File Type</h2>
+                        <div class="file-type-modal-actions">
+                            <button id="exportCSV" onclick="exportToCSV()">Export to CSV</button>
+                            <button id="exportExcel" onclick="exportToExcel()">Export to Excel</button>
+                            <button id="exportPDF" onclick="exportToPDF()">Export to PDF</button>
+                        </div>
+                        <button id="closeModal" onclick="closeExportModal()">Close</button>
+                    </div>
+                </div>
     </div>
 
     <script>
+        function openExportModal() {
+        document.getElementById('exportModal').style.display = 'flex';
+    }
+
+    function closeExportModal() {
+        document.getElementById('exportModal').style.display = 'none';
+    }
+
+          const exportBtn = document.querySelector('#exportBtn');
+        const fileTypeModal = document.querySelector('#fileTypeModal');
+        const closeModalBtn = document.querySelector('#closeModal');
+
+        exportBtn.addEventListener('click', function() {
+            fileTypeModal.style.display = 'flex';
+        });
+
+        closeModalBtn.addEventListener('click', function() {
+            fileTypeModal.style.display = 'none';
+        });
+
+        window.onclick = function(event) {
+            if (event.target === fileTypeModal) {
+                fileTypeModal.style.display = 'none';
+            }
+        };
+
+
+
+
         function filterAssets() {
             const searchTerm = document.getElementById('searchBar').value.toLowerCase();
             const selectedType = document.getElementById('assetTypeFilter').value.toLowerCase();
@@ -246,49 +353,68 @@
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    // Add the title
-    doc.setFontSize(18);
-    doc.setTextColor(22, 93, 10); // Dark green color
-    doc.text('CANAL SUGAR ASSIGNED ASSETS REPORT', 14, 20); // Title position and text
+    // Load the logo image
+    const logo = new Image();
+    logo.src = '../images/canalsugar.png'; // Replace with the correct path to your logo
 
-    // Add some space between title and table
-    doc.setFontSize(12);
-    doc.text('', 14, 30);
+    logo.onload = function () {
+        const imgWidth = 50; // Adjust the image width
+        const imgHeight = 30; // Adjust the image height
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const xOffset = (pageWidth - imgWidth) / 2; // Center the image
 
-    // Initialize the table data
-    let data = [];
-    let headers = [];
+        // Add the logo to the PDF
+        doc.addImage(logo, 'PNG', xOffset, 10, imgWidth, imgHeight); // Position and size of the logo
 
-    // Extract the headers
-    headers = Array.from(document.querySelectorAll('thead th:not(:last-child)'))
-        .map(header => header.innerText);
-    data.push(headers);
+        // Add the title below the logo
+        doc.setFontSize(18);
+        doc.setTextColor(22, 93, 10); // Dark green color
+        doc.text('CANAL SUGAR ASSET REPORT', pageWidth / 2, imgHeight + 25, { align: 'center' }); // Center the title
 
-    // Extract visible rows
-    const rows = document.querySelectorAll('#assignedTableBody tr');
-    rows.forEach(function (row) {
-        if (row.style.display !== 'none') {
-            let cols = Array.from(row.querySelectorAll('td:not(:last-child)'))
-                .map(col => col.innerText);
-            data.push(cols);
-        }
-    });
+        // Add some space between the title and the table
+        const startY = imgHeight + 35;
 
-    // Use autoTable to add the table to the PDF
-    doc.autoTable({
-        startY: 30, // Start the table after the title
-        head: [data[0]],
-        body: data.slice(1),
-        headStyles: {
-            fillColor: [22, 93, 10] // Dark green color for header cells
-        },
-        styles: {
-            fontSize: 10, // Adjust font size
-        }
-    });
+        // Initialize the table data
+        let data = [];
+        let headers = [];
 
-    // Save the PDF
-    doc.save('AssignedAssets_report.pdf');
+        // Extract the headers
+        headers = Array.from(document.querySelectorAll('thead th:not(:last-child)'))
+            .map(header => header.innerText);
+        data.push(headers);
+
+        // Extract visible rows
+        const rows = document.querySelectorAll('#assignedTableBody tr');
+        rows.forEach(function (row) {
+            if (row.style.display !== 'none') {
+                let cols = Array.from(row.querySelectorAll('td:not(:last-child)'))
+                    .map(col => col.innerText);
+                data.push(cols);
+            }
+        });
+
+        // Use autoTable to add the table to the PDF
+        doc.autoTable({
+            startY: startY, // Start the table after the title and logo
+            head: [data[0]],
+            body: data.slice(1),
+            headStyles: {
+                fillColor: [22, 93, 10] // Dark green color for header cells
+            },
+            styles: {
+                fontSize: 10, // Adjust font size
+            }
+        });
+
+        // Save the PDF
+        doc.save('AssignedAssets_report.pdf');
+    };
+
+    // Error handling for image loading
+    logo.onerror = function () {
+        console.error('Failed to load the logo image.');
+        alert('Failed to load the logo image.');
+    };
 }
 
 

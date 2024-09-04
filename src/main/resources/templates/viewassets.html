@@ -297,6 +297,83 @@
     align-items: center;
 }
 
+#exportModal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's above other elements */
+}
+
+.export-modal-content {
+    background-color: #fefefe;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
+    text-align: center; /* Center the text inside the modal */
+}
+
+.export-modal-content h2 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #333;
+}
+
+.export-modal-content button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    display: block;
+    width: 100%;
+    color: #ffffff;
+}
+
+.export-modal-content button#exportCSV {
+    background-color: #007bff;
+}
+
+.export-modal-content button#exportExcel {
+    background-color: #28a745;
+}
+
+.export-modal-content button#exportPDF {
+    background-color: #dc3545;
+}
+
+.export-modal-content button:hover {
+    opacity: 0.9;
+}
+
+#closeModal {
+    background-color: #6c757d;
+    color: #ffffff;
+    margin-top: 10px;
+}
+#openn{
+    background-color: green;
+    color: white;
+    border: 2px solid #0a4521;
+        /* Border color matching the theme */
+        border-radius: 8px;
+        /* Rounded corners */
+        outline: none;
+        /* Remove default outline */
+        cursor: pointer;
+        /* Change cursor to pointer */
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    
+}
+
 </style>
 
 <body>
@@ -348,18 +425,20 @@
         </table>
 
         <!-- Export Options -->
-        <div class="export__file">
-            <h2>Export Options:</h2>
-            <div class="export__file-options">
-                <label class="export__file-btn" onclick="exportToCSV()">Export to CSV</label>
-                <br>
-                <label class="export__file-btn" onclick="exportToExcel()">Export to Excel</label>
-                <br>
-                <label class="export__file-btn" id="toPDF">Export to PDF</label>
-                <br>
+        <button id="openn" onclick="openExportModal()">Open Export Modal</button>
 
-            </div>
+<!-- Export Modal HTML (as before) -->
+<div id="exportModal" class="file-type-modal">
+    <div class="export-modal-content">
+        <h2>Select File Type</h2>
+        <div class="file-type-modal-actions">
+            <button id="exportCSV" onclick="exportToCSV()">Export to CSV</button>
+            <button id="exportExcel" onclick="exportToExcel()">Export to Excel</button>
+            <button id="exportPDF" onclick="exportToPDF()">Export to PDF</button>
         </div>
+        <button id="closeModal" onclick="closeExportModal()">Close</button>
+    </div>
+</div>
         <!-- Modal Structure -->
         <div id="deleteModal" class="modal">
             <div class="modal-content">
@@ -376,6 +455,33 @@
     </div>
 
     <script>
+
+function openExportModal() {
+        document.getElementById('exportModal').style.display = 'flex';
+    }
+
+    function closeExportModal() {
+        document.getElementById('exportModal').style.display = 'none';
+    }
+
+          const exportBtn = document.querySelector('#exportBtn');
+        const fileTypeModal = document.querySelector('#fileTypeModal');
+        const closeModalBtn = document.querySelector('#closeModal');
+
+        exportBtn.addEventListener('click', function() {
+            fileTypeModal.style.display = 'flex';
+        });
+
+        closeModalBtn.addEventListener('click', function() {
+            fileTypeModal.style.display = 'none';
+        });
+
+        window.onclick = function(event) {
+            if (event.target === fileTypeModal) {
+                fileTypeModal.style.display = 'none';
+            }
+        };
+
         function filterAssets() {
             const searchTerm = document.getElementById('searchBar').value.toLowerCase();
             const selectedType = document.getElementById('assetTypeFilter').value.toLowerCase();

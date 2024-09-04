@@ -20,9 +20,9 @@ public class indexController {
         return mav;
     }
 
-    @GetMapping("/home")
+    @GetMapping("/error")
     public ModelAndView gethome2() {
-        ModelAndView mav = new ModelAndView("CShome2");
+        ModelAndView mav = new ModelAndView("error");
         return mav;
     }
 

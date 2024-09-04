@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Access Denied</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: darkgreen; /* Dark background */
+            color: #fff; /* White text color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            border: 5px solid green; /* Red border */
+            background-color: white; /* Darker background for container */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .logo {
+            margin-bottom: 20px;
+        }
+
+        .logo img {
+            max-width: 125px; /* Adjust the size of the logo */
+            height: auto;
+        }
+
+        .container h2 {
+            font-size: 40px;
+            color: darkgreen; /* Red color for the error message */
+            margin-bottom: 20px;
+        }
+
+        .container p {
+            font-size: 24px;
+            color: rgb(4, 52, 4); /* Light grey for the details */
+        }
+
+        .container i {
+            font-size: 100px;
+            color: #e74c3c; /* Red color for the icon */
+            margin-bottom: 20px;
+        }
+
+        .btn-danger {
+            background-color: green;
+            border-color:green;
+            padding: 10px 20px;
+            font-size: 20px;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .btn-danger:hover {
+            background-color:darkgreen;
+            border-color: darkgreen;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="../images/canalsugar.png" alt="Canal Sugar Logo"> <!-- Replace with your logo's path -->
+        </div>
+        <i class="ri-alert-line"></i> <!-- Warning icon -->
+        <h2>ERROR: ACCESS DENIED</h2>
+        <p>An error has occurred or you don't have permission to access this page.</p>
+        <a href="/" class="btn btn-danger">Go to Home</a>
+    </div>
+</body>
+
+</html>

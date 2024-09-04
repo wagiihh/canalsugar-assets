@@ -75,7 +75,12 @@ public class AssetsController {
 
     
     @GetMapping("/addAssetType")
-    public ModelAndView showAssetTypeForm() {
+    public ModelAndView showAssetTypeForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            ModelAndView mav = new ModelAndView("error");
+            return mav;        
+        }
         ModelAndView mav = new ModelAndView("addAssetType");
         Admin newAdmin=new Admin();
         AssetType newAssetType=new AssetType();
@@ -102,7 +107,12 @@ public class AssetsController {
     }
 
     @GetMapping("/addAsset")
-    public ModelAndView showAssetForm() {
+    public ModelAndView showAssetForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            ModelAndView mav = new ModelAndView("error");
+            return mav;        
+        }
         ModelAndView mav = new ModelAndView("addAsset");
         Asset newAsset = new Asset();
         List<AssetType> assetTypes = assetTypeRepository.findAll();
@@ -129,7 +139,12 @@ public class AssetsController {
     }
 
     @GetMapping("/viewassets")
-    public ModelAndView viewAssetForm() {
+    public ModelAndView viewAssetForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            ModelAndView mav = new ModelAndView("error");
+            return mav;        
+        }
         ModelAndView mav = new ModelAndView("viewassets");
         List<Asset> assets = assetRepository.findAll();
         List<AssetType>assetTypes=assetTypeRepository.findAll();
@@ -139,6 +154,11 @@ public class AssetsController {
     }
     @GetMapping("editasset/{assetid}")
     public ModelAndView editAppointmentForm(@PathVariable Integer assetid, HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            ModelAndView mav = new ModelAndView("error");
+            return mav;        
+        }
         ModelAndView mav = new ModelAndView("editasset");
         Asset oldasset=this.assetRepository.findByAssetid(assetid);
         System.out.println("-------------------------------------the user sent in the edit form :" + assetid);
@@ -156,7 +176,12 @@ public class AssetsController {
     }
 
     @GetMapping("/viewassettypes")
-    public ModelAndView viewAssetTypeForm() {
+    public ModelAndView viewAssetTypeForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            ModelAndView mav = new ModelAndView("error");
+            return mav;        
+        }
         ModelAndView mav = new ModelAndView("viewassettypes");
         List<AssetType>assetTypes=assetTypeRepository.findAll();
         mav.addObject("assetTypes", assetTypes);
@@ -164,6 +189,11 @@ public class AssetsController {
     }
     @GetMapping("editassettype/{assettypeid}")
     public ModelAndView editassetype(@PathVariable Integer assettypeid, HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            ModelAndView mav = new ModelAndView("error");
+            return mav;        
+        }
         ModelAndView mav = new ModelAndView("editassettype");
         AssetType oldassettype=this.assetTypeRepository.findByAssettypeid(assettypeid);
         System.out.println("-------------------------------------the user sent in the edit form :" + assettypeid);
@@ -179,14 +209,25 @@ public class AssetsController {
     }
     @GetMapping("deleteassettype/{assettypeid}")
     @Transactional
-    public RedirectView deleteAssetType(@PathVariable Integer assettypeid) {
+    public RedirectView deleteAssetType(@PathVariable Integer assettypeid,HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            return new RedirectView("/error");
+
+        }
         AssetType currAssetType=this.assetTypeRepository.findByAssettypeid(assettypeid);
         this.assetTypeRepository.delete(currAssetType);
         return new RedirectView("/asset/viewassettypes");
     }
     @GetMapping("deleteasset/{assetid}")
 @Transactional
-public RedirectView deleteAsset(@PathVariable Integer assetid) {
+public RedirectView deleteAsset(@PathVariable Integer assetid,HttpSession session) {
+    if(session.getAttribute("email")==null)
+        {
+     
+            return new RedirectView("/error");
+        }
+
     Asset asset = this.assetRepository.findByAssetid(assetid);
     this.assetRepository.delete(asset);
 

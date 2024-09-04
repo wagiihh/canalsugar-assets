@@ -68,6 +68,11 @@ public class AssignedAssetController {
     private ApplicationEventPublisher eventPublisher;
     @GetMapping("/assign")
     public ModelAndView showAssignAssetForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            ModelAndView mav = new ModelAndView("error");
+            return mav;        
+        }
         ModelAndView mav = new ModelAndView("assignasset");
     
         // Get all assets
@@ -117,7 +122,12 @@ public class AssignedAssetController {
         return new RedirectView("/asset/viewassets");
     }
     @GetMapping("/viewassigned")
-    public ModelAndView showassigendForm() {
+    public ModelAndView showassigendForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            ModelAndView mav = new ModelAndView("error");
+            return mav;        
+        }
         ModelAndView mav = new ModelAndView("viewassigned");
 
         AssignedAsset assignedAsset=new AssignedAsset();
@@ -130,6 +140,11 @@ public class AssignedAssetController {
     }
     @GetMapping("editassigned/{asid}")
     public ModelAndView editAssignedForm(@PathVariable Integer asid, HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            ModelAndView mav = new ModelAndView("error");
+            return mav;        
+        }
         ModelAndView mav = new ModelAndView("editassigned");
         AssignedAsset oldAssigned = this.assignedAssetsRepository.findByAsid(asid);
         
@@ -174,7 +189,11 @@ public class AssignedAssetController {
 
     @GetMapping("deleteassigned/{asid}")
     @Transactional
-    public RedirectView deleteAssigned(@PathVariable Integer asid) {
+    public RedirectView deleteAssigned(@PathVariable Integer asid,HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            return new RedirectView("/error");        
+        }
         AssignedAsset assigned=this.assignedAssetsRepository.findByAsid(asid);
         this.assignedAssetsRepository.delete(assigned);
 
@@ -182,7 +201,12 @@ public class AssignedAssetController {
     }
 
     @GetMapping("/viewavailable")
-    public ModelAndView viewAssetForm() {
+    public ModelAndView viewAssetForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            ModelAndView mav = new ModelAndView("error");
+            return mav;        
+        }
         ModelAndView mav = new ModelAndView("viewavailable");
     
         // Fetch all assets
@@ -209,7 +233,12 @@ public class AssignedAssetController {
     }
 
 @GetMapping("/assignasset/{assetid}")
-public ModelAndView showAssignAssetForm(@PathVariable Integer assetid) {
+public ModelAndView showAssignAssetForm(@PathVariable Integer assetid,HttpSession session) {
+    if(session.getAttribute("email")==null)
+    {
+        ModelAndView mav = new ModelAndView("error");
+        return mav;        
+    }
     ModelAndView mav = new ModelAndView("assignspecificasset");
 
     Asset asset = assetRepository.findByAssetid(assetid);

@@ -70,6 +70,11 @@ public class AdminController {
 
     @GetMapping("/home")
     public ModelAndView Home(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         String firstname = (String) session.getAttribute("Firstname");
         System.out.println("Firstname from session: " + firstname);
         ModelAndView mav = new ModelAndView("CSHome");
@@ -79,6 +84,11 @@ public class AdminController {
 
     @GetMapping("/settings")
     public ModelAndView settings(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         String firstname = (String) session.getAttribute("Firstname");
 
         ModelAndView mav = new ModelAndView("AccountSettings");
@@ -89,6 +99,11 @@ public class AdminController {
 
     @GetMapping("Profile")
     public ModelAndView getProfile(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         ModelAndView mav = new ModelAndView("Profile");
 
         mav.addObject("email", (String) session.getAttribute("email"));
@@ -100,6 +115,11 @@ public class AdminController {
 
     @GetMapping("editprofile")
     public ModelAndView getEditProfile(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         ModelAndView mav = new ModelAndView("EditProfile");
 
         mav.addObject("email", (String) session.getAttribute("email"));
@@ -116,6 +136,7 @@ public class AdminController {
             @RequestParam("firstname") String firstname,
             @RequestParam("lastname") String lastname,
             @RequestParam("number") String number) {
+                
         Admin adminedit = this.adminRepository.findByEmail((String) session.getAttribute("email"));
         if (adminedit != null) {
             session.setAttribute("Firstname", firstname);
@@ -135,6 +156,10 @@ public class AdminController {
 
     @GetMapping("/deleteAccount")
     public RedirectView deleteAccount(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            return new RedirectView("/error");
+        }
         Admin adminDelete = this.adminRepository.findByEmail((String) session.getAttribute("email"));
         if (adminDelete != null) {
             this.adminRepository.delete(adminDelete);
@@ -145,7 +170,12 @@ public class AdminController {
     }
 
     @GetMapping("/adduser")
-    public ModelAndView showSignupForm() {
+    public ModelAndView showSignupForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         ModelAndView mav = new ModelAndView("signup.html");
         User newUser = new User();
         mav.addObject("newUser", newUser);
@@ -173,7 +203,12 @@ public class AdminController {
     }
 
     @GetMapping("/viewUsers")
-    public ModelAndView showAddUserForm() {
+    public ModelAndView showAddUserForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         ModelAndView mav = new ModelAndView("viewUsers.html");
 
         User newUser = new User();
@@ -187,6 +222,11 @@ public class AdminController {
 
     @GetMapping("edit/{userID}")
     public ModelAndView editAppointmentForm(@PathVariable Integer userID, HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         ModelAndView mav = new ModelAndView("editUser.html");
         User oldUser = this.userRepository.findByUserID(userID);
         System.out.println("-------------------------------------the user sent in the edit form :" + oldUser);
@@ -205,7 +245,12 @@ public class AdminController {
 
     @GetMapping("delete/{userID}")
     @Transactional
-    public RedirectView deleteAppointment(@PathVariable Integer userID) {
+    public RedirectView deleteAppointment(@PathVariable Integer userID,HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            return new RedirectView("/error");
+        
+        }
         User currUser = this.userRepository.findByUserID(userID);
         this.userRepository.delete(currUser);
 
@@ -218,7 +263,12 @@ public class AdminController {
     }
 
     @GetMapping("/addadmin")
-    public ModelAndView showAdminForm() {
+    public ModelAndView showAdminForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         ModelAndView mav = new ModelAndView("addadmin.html");
         User newUser = new User();
         Admin newAdmin=new Admin();
@@ -263,7 +313,12 @@ public class AdminController {
     }
 
     @GetMapping("/viewAdmins")
-    public ModelAndView showAddadminsForm() {
+    public ModelAndView showAddadminsForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         ModelAndView mav = new ModelAndView("viewadmins");
         Admin admin=new Admin();
         List<Admin> alladmins=adminRepository.findAll();
@@ -275,7 +330,12 @@ public class AdminController {
 
     @GetMapping("deleteadmin/{AdminID}")
     @Transactional
-    public RedirectView deleteAssetType(@PathVariable Integer AdminID) {
+    public RedirectView deleteAssetType(@PathVariable Integer AdminID,HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            return new RedirectView("/error");
+        
+        }
         AssetType currAssetType=this.assetTypeRepository.findByAssettypeid(AdminID);
         Admin currAdmin=this.adminRepository.findByAdminID(AdminID);
         this.adminRepository.delete(currAdmin);
@@ -284,7 +344,12 @@ public class AdminController {
     
 
     @GetMapping("/stock")
-    public ModelAndView showStockForm() {
+    public ModelAndView showStockForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         ModelAndView mav = new ModelAndView("stock");
 
         // Find distinct asset types
@@ -310,7 +375,12 @@ public class AdminController {
     }
 
     @GetMapping("/addDepartment")
-    public ModelAndView DepartmentForm() {
+    public ModelAndView DepartmentForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         ModelAndView mav = new ModelAndView("addDepartment");
         Department newDepartment=new Department();
         mav.addObject("newDepartment", newDepartment);
@@ -338,7 +408,12 @@ public class AdminController {
     }
 
     @GetMapping("/viewDepartments")
-    public ModelAndView viewDepartmentsForm() {
+    public ModelAndView viewDepartmentsForm(HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         ModelAndView mav = new ModelAndView("viewDepartments");
         List<Department> departments=departmentRepository.findAll();
         mav.addObject("departments", departments);
@@ -346,6 +421,11 @@ public class AdminController {
     }
     @GetMapping("editdepartment/{departmentID}")
     public ModelAndView editDepartment(@PathVariable Integer departmentID, HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+        ModelAndView mav = new ModelAndView("error");
+            return mav;
+        }
         ModelAndView mav = new ModelAndView("editdepartment");
         Department oldDepartment = this.departmentRepository.findByDepartmentID(departmentID);
         System.out.println("-------------------------------------the department sent in the edit form :" + departmentID);
@@ -375,7 +455,12 @@ public class AdminController {
 
     @GetMapping("deletedepartment/{departmentID}")
     @Transactional
-    public RedirectView deleteDepartment(@PathVariable Integer departmentID) {
+    public RedirectView deleteDepartment(@PathVariable Integer departmentID,HttpSession session) {
+        if(session.getAttribute("email")==null)
+        {
+            return new RedirectView("/error");
+        
+        }
         Department currDepartment=this.departmentRepository.findByDepartmentID(departmentID);
         this.departmentRepository.delete(currDepartment);
         return new RedirectView("/admin/viewDepartments");

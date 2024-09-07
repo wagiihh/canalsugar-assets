@@ -81,6 +81,8 @@ public class AdminController {
         System.out.println("Firstname from session: " + firstname);
         ModelAndView mav = new ModelAndView("CSHome");
         mav.addObject("FNAME", firstname);
+        List<Asset> last4Assets = assetRepository.findTop4ByOrderByAssetidDesc();
+        mav.addObject("last4Assets", last4Assets);
         return mav;
     }
 

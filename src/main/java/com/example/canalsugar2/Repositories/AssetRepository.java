@@ -17,5 +17,8 @@ public interface AssetRepository extends JpaRepository<Asset,Integer> {
 
     @Query("SELECT DISTINCT a.assetType FROM Asset a")
     List<AssetType> findDistinctAssetTypes();
+
+    @Query(value = "SELECT a FROM Asset a ORDER BY a.assetid DESC")
+    List<Asset> findTop4ByOrderByAssetidDesc();
     
 }

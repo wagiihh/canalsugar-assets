@@ -13,17 +13,19 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
-
-    
-
     <title>Canal Sugar</title>
 </head>
-<style>
-    .target-vs-sales--container{
-    background-image: url('../images/CSHOME.jpg');
 
+<style>
+    .target-vs-sales--container {
+        background-image: url('../images/CSHOME.jpg');
+    }
+    table.table tbody td:hover {
+     background-color: darkgreen;
+     color: white;
     }
 </style>
+
 <body class="body">
     <div th:insert="navigation"></div>
 
@@ -40,13 +42,26 @@
         </div>
         <div class="table">
             <div class="section--title">
-                <h3 class="title">Recently Added Assets</h3>
+                <h3 class="title">RECENTLY ADDED ASSETS</h3>
             </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asset Name</th>
+                        <th>Asset Model</th>
+                        <th>Asset Serial</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="asset : ${last4Assets}">
+                        <td th:text="${asset.assetname}"></td>
+                        <td th:text="${asset.assetmodel}"></td>
+                        <td th:text="${asset.assetserial}"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-
-
-
 </body>
 
 <!-- <script src="../js/CSHome.js"></script> -->

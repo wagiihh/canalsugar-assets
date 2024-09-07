@@ -37,7 +37,7 @@
             padding: 20px;
             box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
             z-index: 999;
-            transition: all 0.3s;
+            overflow-y: auto; /* Enable vertical scrolling */
             font-family: 'Poppins', sans-serif;
         }
 
@@ -140,13 +140,11 @@
 </head>
 <body>
     <div class="top-bar">
-        <!-- <h2 style="text-align: center; padding: 10px;">Canal Sugar</h2>
-        <span class="menu-btn bx bx-menu" style="font-size: 24px; cursor: pointer;"></span> -->
+        <!-- Top bar content -->
     </div>
 
     <div class="sidebar">
-        
-        <img th:src="@{/images/canalsugar.png}" alt="Canal Sugar Logo66">
+        <img th:src="@{/images/canalsugar.png}" alt="Canal Sugar Logo">
         <a th:href="@{/admin/home}">HOME</a>
         <a th:href="@{/admin/stock}">STOCK</a>
         

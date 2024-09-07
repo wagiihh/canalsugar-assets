@@ -28,7 +28,6 @@
             <input class="login-field" type="password" name="pass" id="pass" placeholder="Password">
             <span id="pass-error" class="error-message"></span>
 
-            <a class="link" th:href="@{/admin/forgetpassword}">Forgot Password?</a>
             <div th:if="${error}" class="error-message" style="color: red;">
                 <p th:text="${error}"></p>
             </div>

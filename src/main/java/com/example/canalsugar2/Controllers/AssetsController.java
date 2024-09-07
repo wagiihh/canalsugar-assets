@@ -109,47 +109,44 @@ public class AssetsController {
 
         }
     }
-
     @GetMapping("/addAsset")
     public ModelAndView showAssetForm(HttpSession session) {
-        if(session.getAttribute("email")==null)
-        {
-            ModelAndView mav = new ModelAndView("error");
-            return mav;        
+        if(session.getAttribute("email") == null) {
+            return new ModelAndView("error");
         }
-        ModelAndView mav = new ModelAndView("addAsset");
         Asset newAsset = new Asset();
-        List<AssetType> assetTypes = assetTypeRepository.findAll();
-        mav.addObject("assetTypes", assetTypes);
+
+        ModelAndView mav = new ModelAndView("addAsset");
         mav.addObject("newAsset", newAsset);
+        mav.addObject("assetTypes", assetTypeRepository.findAll());
         return mav;
     }
     
-    @PostMapping("addAsset")
+    @PostMapping("/addAsset")
     public ModelAndView processAssetForm(@Valid @ModelAttribute("newAsset") Asset newAsset, BindingResult result) {
-        ModelAndView SignupModel = new ModelAndView("addAsset");
-        ModelAndView refresh = new ModelAndView("CSHOME.html");
+        System.out.println("ALOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
         if (result.hasErrors()) {
             ModelAndView mav = new ModelAndView("addAsset");
-            mav.addObject("newAsset", newAsset);
-            List<AssetType> assetTypes = assetTypeRepository.findAll();
-            mav.addObject("assetTypes", assetTypes);
+            mav.addObject("assetTypes", assetTypeRepository.findAll());
+            mav.addObject("errorMessage", result.getAllErrors());
+            System.out.println(result.getAllErrors());
             return mav;
         }
-        Asset existingAsset=assetRepository.findByAssetserial(newAsset.getAssetserial());
-
+        
+        Asset existingAsset = assetRepository.findByAssetserial(newAsset.getAssetserial());
         if (existingAsset != null) {
-            List<AssetType> assetTypes = assetTypeRepository.findAll();
-            SignupModel.addObject("assetTypes", assetTypes);
-            SignupModel.addObject("ErrorMessage", "Asset already exists with this Serial Number. Please review the details or choose a different Serial Number.");
-            return SignupModel;
-        } else {
-            Asset asset=newAsset.getAsset();
-            this.assetRepository.save(asset);
-            return new ModelAndView("redirect:/asset/viewassets");
-
+            ModelAndView mav = new ModelAndView("addAsset");
+            mav.addObject("assetTypes", assetTypeRepository.findAll());
+            mav.addObject("errorMessage", "Asset already exists with this Serial Number. Please review the details or choose a different Serial Number.");
+            return mav;
         }
+        
+        assetRepository.save(newAsset);
+        return new ModelAndView("redirect:/asset/viewassets");
     }
+    
+    
+
 
     @GetMapping("/viewassets")
     public ModelAndView viewAssetForm(HttpSession session) {
@@ -232,15 +229,17 @@ public class AssetsController {
         this.assetTypeRepository.delete(currAssetType);
         return new RedirectView("/asset/viewassettypes");
     }
-    @GetMapping("deleteasset/{assetid}")
+ @GetMapping("deleteasset/{assetid}")
 @Transactional
 public RedirectView deleteAsset(@PathVariable Integer assetid,HttpSession session) {
+
     if(session.getAttribute("email")==null)
         {
      
             return new RedirectView("/error");
         }
 
+        System.out.println("ANA HENA FEL DELETEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
     Asset asset = this.assetRepository.findByAssetid(assetid);
     this.assetRepository.delete(asset);
 

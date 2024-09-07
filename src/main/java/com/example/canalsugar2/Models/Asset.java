@@ -33,7 +33,6 @@ public class Asset {
     private String assetname;
 
     @NotNull
-    @Valid
     @ManyToOne
     @JoinColumn(name = "assettypeid", referencedColumnName = "assettypeid", insertable = true, updatable = true)
     private AssetType assetType;

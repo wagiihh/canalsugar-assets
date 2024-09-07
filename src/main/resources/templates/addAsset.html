@@ -13,10 +13,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    
+
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> 
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </head>
 
@@ -33,46 +33,86 @@
         <div class="card">
             <div class="card-body">
                 <h2 class="card-title">Asset Registration</h2>
-                <form th:action="@{/asset/addAsset}" th:object="${newAsset}" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-                    <div id="patient-fields">
-                        
-                        <div class="form-group">
-                            <label for="assetname">Asset Brand Name:</label>
-                            <input type="text" class="form-control" id="assetname" th:field="*{assetname}" placeholder="Asset Brand Name">
-                            <span th:if="${#fields.hasErrors('assetname')}" th:errors="*{assetname}" class="error-message"></span>
-                            <span id="error-fname" class="error-message"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="assetserial">Asset Serial Number:</label>
-                            <input type="text" class="form-control" id="assetserial" th:field="*{assetserial}" placeholder="Asset Serial Number">
-                            <span th:if="${#fields.hasErrors('assetserial')}" th:errors="*{assetserial}" class="error-message"></span>
-                            <span id="error-lname" class="error-message"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="assetmodel">Asset Model:</label>
-                            <input type="text" class="form-control" id="assetmodel" th:field="*{assetmodel}" placeholder="Asset Model">
-                            <span th:if="${#fields.hasErrors('assetmodel')}" th:errors="*{assetmodel}" class="error-message"></span>
-                            <span id="error-phone" class="error-message"></span>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="assetType">Asset Type:</label>
-                            <select class="form-control" id="assetType" th:field="*{assetType.assettypeid}">
-                                <option th:each="assettype : ${assetTypes}" th:value="${assettype.assettypeid}" th:text="${assettype.name}"></option>
-                            </select>
-                            <span th:if="${#fields.hasErrors('assetType.assettypeid')}" th:errors="*{assetType.assettypeid}" class="error-message"></span>
-                        </div>                        
-                    </div>        
+                <form th:action="@{/asset/addAsset}" th:object="${newAsset}" method="post" enctype="multipart/form-data">
+                    <!-- form fields -->
+                    <div class="form-group">
+                        <label for="assetname">Asset Brand Name:</label>
+                        <input type="text" class="form-control" id="assetname" th:field="*{assetname}" placeholder="Asset Brand Name">
+                        <span th:if="${#fields.hasErrors('assetname')}" th:errors="*{assetname}" class="error-message"></span>
+                    </div>
                     
-                    <span th:if="${ErrorMessage}" th:text="${ErrorMessage}" class="alert alert-warning"></span>
+                    <div class="form-group">
+                        <label for="assetserial">Asset Serial Number:</label>
+                        <input type="text" class="form-control" id="assetserial" th:field="*{assetserial}" placeholder="Asset Serial Number">
+                        <span th:if="${#fields.hasErrors('assetserial')}" th:errors="*{assetserial}" class="error-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="assetmodel">Asset Model:</label>
+                        <input type="text" class="form-control" id="assetmodel" th:field="*{assetmodel}" placeholder="Asset Model">
+                        <span th:if="${#fields.hasErrors('assetmodel')}" th:errors="*{assetmodel}" class="error-message"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="assetType">Asset Type:</label>
+                        <select class="form-control" id="assetType" th:field="*{assetType.assettypeid}">
+                            <option th:each="assettype : ${assetTypes}" th:value="${assettype.assettypeid}" th:text="${assettype.name}"></option>
+                        </select>                        
+                        <span th:if="${#fields.hasErrors('assetType.assettypeid')}" th:errors="*{assetType.assettypeid}" class="error-message"></span>
+                    </div>
                     
                     <button id="submit" type="submit" class="btn btn-primary" name="submit">ADD ASSET</button>
                 </form>
+                
             </div>
         </div>
     </div>
 </body>
-<script src="../js/addasset.js"></script>
+<script>function disableFields(disable, container) {
+        container.querySelectorAll("input, select").forEach(function (input) {
+            input.disabled = disable;
+        });
+    }
+
+    function validateForm() {
+        var email = document.getElementById('email').value.trim();
+        var password = document.getElementById('password').value.trim();
+        var fname = document.getElementById('firstname').value.trim();
+        var lname = document.getElementById('lastname').value.trim();
+        var age = document.getElementById('age').value.trim();
+        var phone = document.getElementById('phone').value.trim();
+        var address = document.getElementById('address').value.trim();
+        var emailError = document.getElementById("error-email");
+        var passError = document.getElementById("error-pass");
+        var lname_error = document.getElementById("error-lname");
+        var fname_error = document.getElementById("error-fname");
+        var age_error = document.getElementById("error-age");
+        var address_error = document.getElementById("error-address");
+        var phone_error = document.getElementById("error-phone");
+
+        var isValid = true;
+
+        if (!email) {
+            emailError.textContent = "Email is required";
+            isValid = false;
+            return false;
+        }
+
+        if (password === "") {
+            passError.textContent = "Password can't be empty";
+            isValid = false;
+            return false;
+        }
+        if (password.length < 6) {
+            passError.textContent = "Password cannot be less than 6 characters";
+            isValid = false;
+            return false;
+        }
+
+        if (!isValid) {
+            event.preventDefault();
+        }
+        return isValid;
+    }</script>
+
 </html>

@@ -19,13 +19,11 @@ public class AssignedAsset {
     private int asid;
 
     @NotNull
-    @Valid
     @ManyToOne
     @JoinColumn(name = "assetid", referencedColumnName = "assetid", insertable = true, updatable = true)
     private Asset asset;
 
     @NotNull
-    @Valid
     @ManyToOne
     @JoinColumn(name = "userID", referencedColumnName = "userID", insertable = true, updatable = true)
     private User user;

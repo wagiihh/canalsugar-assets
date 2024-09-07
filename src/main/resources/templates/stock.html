@@ -11,71 +11,91 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/stock.css">
-
 </head>
+<style>
+    /* Styling for the "No asset statistics available" message */
+.no-assets-message {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 18px;
+    color: #E53E3E; /* A bold red color to give a sense of urgency or danger */
+    background-color: #FFF5F5; /* A very light red background to make the text pop */
+    border: 1px solid #E53E3E; /* A border matching the text color */
+    border-radius: 8px; /* Rounded corners for a friendly look */
+    padding: 16px;
+    margin: 20px 0;
+    text-align: center;
+}
+
+</style>
 <body>
     <div th:insert="navigation"></div>
-   
+
     <div class="container">
-        <div th:each="assetStats : ${assetStatisticsList}">
-            <div class="asset-section">
-                <label th:text="${assetStats.assetType.name + ' RECORDS:'}"></label>
-                <div class="assets-container">
-                    <div class="asset-box">
-                        <a th:text="${assetStats.totalAssets}" th:href="@{/asset/viewassets}" style="font-size: 24px; color: #333; text-decoration: none;"></a>
-                        <a th:href="@{/asset/viewassets}" style="font-size: 16px; color: #777; text-decoration: none;">Total Number</a>
-                    </div>
-                    <div class="asset-box">
-                        <a th:text="${assetStats.usedAssets}" th:href="@{/assigned/viewassigned}" style="font-size: 24px; color: #333; text-decoration: none;"></a>
-                        <a th:href="@{/assigned/viewassigned}" style="font-size: 16px; color: #777; text-decoration: none;">Used Number</a>
-                    </div>
-                    <div class="asset-box">
-                        <a th:text="${assetStats.availableAssets}" th:href="@{/assigned/viewavailable}" style="font-size: 24px; color: #333; text-decoration: none;"></a>
-                        <a th:href="@{/assigned/viewavailable}" style="font-size: 16px; color: #777; text-decoration: none;">Available Number</a>
+        <div th:if="${#lists.isEmpty(assetStatisticsList)}" class="no-assets-message">
+            <p>No asset statistics available.</p>
+        </div>
+        
+
+        <div th:unless="${#lists.isEmpty(assetStatisticsList)}">
+            <div th:each="assetStats : ${assetStatisticsList}">
+                <div class="asset-section">
+                    <label th:text="${assetStats.assetType.name + ' RECORDS:'}"></label>
+                    <div class="assets-container">
+                        <div class="asset-box">
+                            <a th:text="${assetStats.totalAssets}" th:href="@{/asset/viewassets}" style="font-size: 24px; color: #333; text-decoration: none;"></a>
+                            <a th:href="@{/asset/viewassets}" style="font-size: 16px; color: #777; text-decoration: none;">Total Number</a>
+                        </div>
+                        <div class="asset-box">
+                            <a th:text="${assetStats.usedAssets}" th:href="@{/assigned/viewassigned}" style="font-size: 24px; color: #333; text-decoration: none;"></a>
+                            <a th:href="@{/assigned/viewassigned}" style="font-size: 16px; color: #777; text-decoration: none;">Used Number</a>
+                        </div>
+                        <div class="asset-box">
+                            <a th:text="${assetStats.availableAssets}" th:href="@{/assigned/viewavailable}" style="font-size: 24px; color: #333; text-decoration: none;"></a>
+                            <a th:href="@{/assigned/viewavailable}" style="font-size: 16px; color: #777; text-decoration: none;">Available Number</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <table id="hiddenAssetTable" style="display:none;">
-            <thead>
-                <tr>
-                    <th>Asset Type</th>
-                    <th>Total Number Of The Asset</th>
-                    <th>Used Number Of The Asset</th>
-                    <th>Available Number Of The Asset</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="assetStats : ${assetStatisticsList}">
-                    <td th:text="${assetStats.assetType.name}"></td>
-                    <td th:text="${assetStats.totalAssets}"></td>
-                    <td th:text="${assetStats.usedAssets}"></td>
-                    <td th:text="${assetStats.availableAssets}"></td>
-                </tr>
-            </tbody>
-        </table>
+            <table id="hiddenAssetTable" style="display:none;">
+                <thead>
+                    <tr>
+                        <th>Asset Type</th>
+                        <th>Total Number Of The Asset</th>
+                        <th>Used Number Of The Asset</th>
+                        <th>Available Number Of The Asset</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="assetStats : ${assetStatisticsList}">
+                        <td th:text="${assetStats.assetType.name}"></td>
+                        <td th:text="${assetStats.totalAssets}"></td>
+                        <td th:text="${assetStats.usedAssets}"></td>
+                        <td th:text="${assetStats.availableAssets}"></td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <!-- Export Section -->
-        <button id="export" onclick="openExportModal()">Export</button>
-        <div id="exportModal" class="file-type-modal">
-            <div class="export-modal-content">
-                <h2>Select File Type</h2>
-                <div class="file-type-modal-actions">
-                    <button id="exportCSV" onclick="exportToCSV()">Export to CSV</button>
-                    <button id="exportExcel" onclick="exportToExcel()">Export to Excel</button>
-                    <button id="exportPDF" onclick="exportToPDF()">Export to PDF</button>
+            <!-- Export Section -->
+            <button id="export" onclick="openExportModal()">Export</button>
+            <div id="exportModal" class="file-type-modal">
+                <div class="export-modal-content">
+                    <h2>Select File Type</h2>
+                    <div class="file-type-modal-actions">
+                        <button id="exportCSV" onclick="exportToCSV()">Export to CSV</button>
+                        <button id="exportExcel" onclick="exportToExcel()">Export to Excel</button>
+                        <button id="exportPDF" onclick="exportToPDF()">Export to PDF</button>
+                    </div>
+                    <button id="closeModal" onclick="closeExportModal()">Close</button>
                 </div>
-                <button id="closeModal" onclick="closeExportModal()">Close</button>
             </div>
         </div>
-    
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.17/jspdf.plugin.autotable.min.js"></script>
     <script src="../js/stock.js"></script>
-
 </body>
 </html>

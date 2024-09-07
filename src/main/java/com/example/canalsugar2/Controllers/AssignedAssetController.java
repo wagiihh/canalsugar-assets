@@ -232,59 +232,62 @@ public class AssignedAssetController {
         return mav;
     }
 
-@GetMapping("/assignasset/{assetid}")
-public ModelAndView showAssignAssetForm(@PathVariable Integer assetid,HttpSession session) {
-    if(session.getAttribute("email")==null)
-    {
-        ModelAndView mav = new ModelAndView("error");
-        return mav;        
-    }
-    ModelAndView mav = new ModelAndView("assignspecificasset");
-
-    Asset asset = assetRepository.findByAssetid(assetid);
-    if (asset == null) {
-        // Handle the case where the asset is not found
-        mav.setViewName("errorPage");
-        mav.addObject("message", "Asset not found.");
+    @GetMapping("/assignasset/{assetid}")
+    public ModelAndView showAssignAssetForm(@PathVariable Integer assetid, HttpSession session) {
+        if (session.getAttribute("email") == null) {
+            return new ModelAndView("error");
+        }
+    
+        Asset asset = assetRepository.findByAssetid(assetid);
+        if (asset == null) {
+            ModelAndView mav = new ModelAndView("errorPage");
+            mav.addObject("message", "Asset not found.");
+            return mav;
+        }
+    
+        AssignedAsset newAssignment = new AssignedAsset();
+        newAssignment.setAsset(asset);
+    
+        List<User> users = userRepository.findAll();
+        ModelAndView mav = new ModelAndView("assignspecificasset");
+        mav.addObject("newAssignment", newAssignment);
+        mav.addObject("users", users);
+        mav.addObject("asset", asset);
+    
         return mav;
     }
-
-    AssignedAsset newAssignment = new AssignedAsset();
-    newAssignment.setAsset(asset);
-
-    List<User> users = userRepository.findAll();
-    mav.addObject("newAssignment", newAssignment);
-    mav.addObject("users", users);
-    mav.addObject("asset", asset);
-
-    return mav;
-}
+    
 
 
     @PostMapping("/assignasset/{assetid}")
-    public RedirectView assignAsset(@Valid @ModelAttribute("newAssignment") AssignedAsset newAssignment,
+    public RedirectView assignAsset( @ModelAttribute("newAssignment") AssignedAsset newAssignment,
                                     @RequestParam("userId") Integer userId,
                                     @PathVariable Integer assetid) {
+    
+        // Fetch user and asset by their IDs
         User user = userRepository.findByUserID(userId);
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }
-
+    
         Asset asset = assetRepository.findByAssetid(assetid);
         if (asset == null) {
             throw new IllegalArgumentException("Asset not found");
         }
-
+    
+        // Set the fetched user and asset in the newAssignment
         newAssignment.setUser(user);
         newAssignment.setAsset(asset);
-
+    
+        // Save the new assignment
         assignedAssetsRepository.save(newAssignment);
-
+    
+        // Publish the event
         eventPublisher.publishEvent(new AssetAssignedEvent(this, assetid, userId));
-
-
+    
         return new RedirectView("/assigned/viewassigned");
     }
+    
 
    @Async
     public void sendStockWarning() {

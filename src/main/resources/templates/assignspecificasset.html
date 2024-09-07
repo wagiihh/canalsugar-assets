@@ -116,13 +116,11 @@
                 <p><strong>Asset Type:</strong> <span th:text="${newAssignment.asset.assetType.name}"></span></p>
             </div>
 
-            <!-- User Selection -->
             <div class="form-group">
                 <label for="user">User:</label>
-                <select id="user" name="userId">
-                    <option th:each="user : ${users}" th:value="${user.userID}" th:text="${user.firstname} + ' ' + ${user.lastname}+ ' ' +${user.department.departmentname}"></option>
+                <select id="user" name="userId" required>
+                    <option th:each="user : ${users}" th:value="${user.userID}" th:text="${user.firstname} + ' ' + ${user.lastname} + ' ' + ${user.department.departmentname}"></option>
                 </select>
-                
             </div>
 
             <!-- Submit Button -->

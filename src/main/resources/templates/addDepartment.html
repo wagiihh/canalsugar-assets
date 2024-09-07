@@ -70,29 +70,101 @@
 </head>
 
 <style>
-    body {
-        background-image: url('../images/white.jpg');
-        background-color: antiquewhite;
-        background-position: center;
-        background-size: contain;
-        margin-top: 50px;
-        /* Adjust margin to account for the top bar */
-    }
+      body {
+    background-image: url('../images/white.jpg');
+    background-color: #f9f9f9; /* Light grey background for better contrast */
+    background-position: center;
+    background-size: cover; /* Cover the entire background */
+    margin: 0;
+    font-family: 'Poppins', sans-serif; /* Ensure Poppins font is used */
+    color: #0a4521; /* Dark green text color */
+}
 
-    .container {
-        margin-left: 270px;
-        /* Adjust to fit the sidebar width */
-        padding-top: 10px;
-        /* Add some padding at the top if needed */
-    }
-    span{
-        color: red;
-    }
+.container {
+    margin-left: 270px; /* Adjust to fit the sidebar width */
+    padding-top: 20px; /* Add some padding at the top if needed */
+}
+
+.topBar {
+    width: calc(100% - 220px); /* Adjust width to fit the sidebar */
+    height: 60px; /* Slightly taller for better visibility */
+    background-color: #ffffff; /* White background */
+    color: #0a4521; /* Dark green text */
+    position: fixed;
+    top: 0;
+    left: 220px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 1.2rem; /* Slightly larger text for visibility */
+}
+
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0; /* Light grey border for subtle distinction */
+}
+
+.card-body {
+    padding: 20px;
+    background-color: #ffffff; /* White background for the card */
+}
+
+.card-title {
+    color: #0a4521; /* Dark green text color */
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.form-group label {
+    color: #0a4521; /* Dark green text color */
+    font-weight: bold;
+}
+
+.form-control {
+    border: 1px solid #0a4521; /* Dark green border */
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1rem;
+    color: #0a4521; /* Dark green text */
+}
+
+.form-control::placeholder {
+    color: #a0a0a0; /* Light grey placeholder text */
+}
+
+.btn-primary {
+    background-color: #0a4521; /* Dark green background */
+    border-color: #0a4521; /* Dark green border */
+    color: #ffffff; /* White text */
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: #165d0a; /* Slightly lighter dark green on hover */
+    border-color: #165d0a;
+}
+
+.error-message {
+    color: #ff4d4d; /* Red error message color */
+    font-size: 0.875rem;
+    display: block;
+    margin-top: 5px;
+}
+.top-bar{
+    display: none;
+}
 </style>
 
 <body>
     <div th:include="navigation">
 
+    </div>
+    <div class="topBar">
+        <!-- <h2 style="text-align: center; padding: 10px;">Canal Sugar</h2>
+        <span class="menu-btn bx bx-menu" style="font-size: 24px; cursor: pointer;"></span> -->
     </div>
     <div class="container mt-5">
         <div class="card">

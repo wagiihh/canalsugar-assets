@@ -6,68 +6,119 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- <link rel="stylesheet" href="../css/admin.css"> -->
 
 </head>
-
 
 <style>
     body {
         background-color: white;
         margin: 0;
         padding: 0;
-        font-family: Arial, sans-serif;
+        font-family: 'Poppins', sans-serif;
+        color: #004d26; /* Dark green for text */
     }
 
     .container {
         padding-left: 250px;
-        padding-top: 20px;
+        padding-top: 40px;
+    }
+
+    h1 {
+        color: #004d26; /* Dark green for heading */
+        font-weight: 600;
+        margin-bottom: 30px;
     }
 
     .container p {
+        font-size: 18px;
         margin-bottom: 10px;
-        font-size: 20px;
-    }
-
-    p {
-        padding-top: 10px;
+        color: #004d26; /* Dark green for text */
     }
 
     #sessionValues {
-        font-size: 24px; 
-        font-weight: bold;
-        margin-bottom: 20px;
-        margin-top: 50px;
+        font-size: 20px;
+        font-weight: 500;
+        margin-top: 30px;
+        background-color: #e6f4ea; /* Light green background */
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    #sessionValues label {
+        font-weight: 600;
+        color: #004d26; /* Dark green for labels */
     }
 
     #sessionValues span {
         display: block;
         margin-bottom: 10px;
+        font-weight: 400;
+        color: #004d26;
     }
 
+    a.btn-primary {
+        background-color: #007f3a; /* Dark green for button */
+        border-color: #007f3a;
+        font-weight: 500;
+        padding: 10px 20px;
+        margin-top: 20px;
+        border-radius: 5px;
+        color: white;
+    }
+
+    a.btn-primary:hover {
+        background-color: #005f2b; /* Darker shade for hover */
+        border-color: #005f2b;
+    }
+    .top-bar{
+        display: none;
+    }
+    .topBar {
+    width: calc(100% - 220px);
+    height: 50px;
+    background-color: #ffffff; /* White background */
+    color: #0a4521; /* Dark green text */
+    position: fixed;
+    top: 0;
+    left: 220px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 1.2rem; /* Larger text for visibility */
+}
 </style>
 
 <body>
-    <div th:include="navigation">
-      
-    </div>
-    <div class="container" >
-        <h1><span th:text="${firstname}" ></span> Account View details.</h1>
-    
+    <div th:include="navigation"></div>
+    <div class="topBar">
+        <!-- <h2 style="text-align: center; padding: 10px;">Canal Sugar</h2>
+        <span class="menu-btn bx bx-menu" style="font-size: 24px; cursor: pointer;"></span> -->
+    </div>  
+
+    <div class="container">
+        <h1>Account View Details: <span th:text="${firstname}"></span></h1>
+
         <div id="sessionValues">
-            <label>EMAIL: </label> <span th:text="${email}"></span>
-            <br>
-            <label>First Name: </label> <span th:text="${firstname}"></span>
-            <br>
-            <label>Last Name: </label><span th:text="${lastname}"></span>
-            <br>
-            <label>Phone Number: </label><span th:text="${number}"></span>
+            <label>Email:</label> 
+            <span th:text="${email}"></span>
+            
+            <label>First Name:</label> 
+            <span th:text="${firstname}"></span>
+            
+            <label>Last Name:</label>
+            <span th:text="${lastname}"></span>
+            
+            <label>Phone Number:</label>
+            <span th:text="${number}"></span>
         </div>
-        <a th:href="@{/admin/editprofile}"  style="color: rgb(0, 110, 26);" class="btn btn-primary">Edit Profile</a>
 
+        <a th:href="@{/admin/editprofile}" class="btn btn-primary">Edit Profile</a>
     </div>
-    
-</body>
 
+</body>
 
 </html>

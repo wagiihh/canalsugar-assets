@@ -253,7 +253,6 @@ public ModelAndView showAssignAssetForm(@PathVariable Integer assetid,HttpSessio
     newAssignment.setAsset(asset);
 
     List<User> users = userRepository.findAll();
-
     mav.addObject("newAssignment", newAssignment);
     mav.addObject("users", users);
     mav.addObject("asset", asset);

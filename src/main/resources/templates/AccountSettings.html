@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
     <!-- <link rel="stylesheet" href="../css/admin.css"> -->
 
     <style>
@@ -11,8 +12,24 @@
             background-color: white;
             margin: 0;
             padding: 0;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family: 'Poppins', Helvetica, sans-serif;
         }
+        .top-bar {
+        display: none;
+    }
+
+    .topBar {
+        width: calc(100% - 260px);
+        height: 50px;
+        background-color: white;
+        color: #165d0a;
+        /* Dark green text */
+        position: fixed;
+        top: 0;
+        left: 260px;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
 
         .dashboard-box {
             background-color: white;
@@ -106,7 +123,11 @@
 
 <body>
     <div th:include="navigation">
-      
+    
+    </div>
+    <div class="topBar">
+        <!-- <h2 style="text-align: center; padding: 10px;">Canal Sugar</h2>
+        <span class="menu-btn bx bx-menu" style="font-size: 24px; cursor: pointer;"></span> -->
     </div>
     <div class="filter-container" >
         <div class="dashboard-box">

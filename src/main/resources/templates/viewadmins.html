@@ -6,10 +6,40 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
     <link rel="stylesheet" href="../css/admin.css">
 </head>
 
 <style>
+   body {
+        background-image: url('../images/white.jpg');
+        font-family: 'Poppins', sans-serif;
+        background-position: center;
+        background-size: contain;
+        margin-top: 50px;
+        /* Adjust margin to account for the top bar */
+    }
+
+    .top-bar {
+        display: none;
+    }
+
+    .topBar {
+        width: calc(100% - 260px);
+        height: 50px;
+        background-color: white;
+        color: #165d0a;
+        /* Dark green text */
+        position: fixed;
+        top: 0;
+        left: 260px;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+
+
+    /* Styling for the view div */
     .view {
         position: relative;
         width: 1170px;
@@ -18,7 +48,9 @@
         margin-left: 40px;
         border: 2px solid rgb(242, 230, 230);
         top: 50px;
-        background-color: #ddd;
+        background-color: #ffffff;
+        border: 2px solid #34ff2d;
+        /* Light Green */
         padding: 20px;
         box-sizing: border-box;
     }
@@ -27,14 +59,14 @@
     h1#h1h1 {
         font-size: 24px;
         color: #165d0a;
-        background-color: #ddd;
+        background-color: #ffffff;
         margin-bottom: 20px;
     }
 
     /* Styling for the table */
     table.table {
         width: 100%;
-        background-color: #ddd;
+        background-color: #ffffff;
         margin-top: 20px;
         border-collapse: collapse;
     }
@@ -51,7 +83,7 @@
     table.table tbody td {
         padding: 10px;
         text-align: center;
-        border-bottom: 1px solid #fff;
+        border-bottom: 2px solid #ddd;
     }
 
     /* Styling for the actions column */
@@ -176,11 +208,14 @@
 <body>
 
     <div th:include="navigation"></div>
-
+    <div class="topBar">
+        <!-- <h2 style="text-align: center; padding: 10px;">Canal Sugar</h2>
+        <span class="menu-btn bx bx-menu" style="font-size: 24px; cursor: pointer;"></span> -->
+    </div>
     <div class="view">
         <h1 id="h1h1">CANAL SUGAR ADMINS: </h1>
         <div class="search-bar">
-            <input type="text" id="searchBar" placeholder="Search by asset name or user" oninput="filterAssets()" />
+            <input type="text" id="searchBar" placeholder="Search for admins...." oninput="filterAssets()" />
         </div>
         <table class="table table-dark">
             <thead>

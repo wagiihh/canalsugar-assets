@@ -10,6 +10,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+
 
     <link rel="stylesheet" href="../css/admin.css">
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -17,61 +19,31 @@
 <style>
     body {
         background-image: url('../images/white.jpg');
+        font-family: 'Poppins', sans-serif;
         background-position: center;
         background-size: contain;
         margin-top: 50px;
         /* Adjust margin to account for the top bar */
     }
 
-    /* Sidebar and Top Bar Styles */
     .top-bar {
-        width: calc(100% - 250px);
-        /* Adjust to fit the sidebar width */
+        display: none;
+    }
+
+    .topBar {
+        width: calc(100% - 260px);
         height: 50px;
-        /* Height of the top bar */
-        background-color: #f4f4f4;
-        /* Background color of the top bar */
-        color: #fff;
-        /* Text color */
+        background-color: white;
+        color: #165d0a;
+        /* Dark green text */
         position: fixed;
         top: 0;
-        left: 250px;
-        /* Start after the sidebar */
+        left: 260px;
         z-index: 1000;
-        /* Ensure it is above other content */
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        /* Optional shadow for better visibility */
     }
 
-    .sidebar {
-        width: 250px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100%;
-        background-color: #f4f4f4;
-        border-right: 1px solid #ddd;
-        padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        z-index: 999;
-        /* Ensure sidebar is below the top bar */
-    }
 
-    .sidebar a {
-        display: block;
-        padding: 10px;
-        margin-bottom: 10px;
-        color: #333;
-        text-decoration: none;
-        /* Changed from 'solid' to 'none' */
-        border-radius: 4px;
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .sidebar a:hover {
-        background-color: #165d0a;
-        color: #ffffff;
-    }
 
     /* Styling for the view div */
     .view {
@@ -82,7 +54,9 @@
         margin-left: 40px;
         border: 2px solid rgb(242, 230, 230);
         top: 50px;
-        background-color: #ddd;
+        background-color: #ffffff;
+        border: 2px solid #34ff2d;
+        /* Light Green */
         padding: 20px;
         box-sizing: border-box;
     }
@@ -91,14 +65,14 @@
     h1#h1h1 {
         font-size: 24px;
         color: #165d0a;
-        background-color: #ddd;
+        background-color: #ffffff;
         margin-bottom: 20px;
     }
 
     /* Styling for the table */
     table.table {
         width: 100%;
-        background-color: #ddd;
+        background-color: #ffffff;
         margin-top: 20px;
         border-collapse: collapse;
     }
@@ -115,7 +89,7 @@
     table.table tbody td {
         padding: 10px;
         text-align: center;
-        border-bottom: 1px solid #fff;
+        border-bottom: 2px solid #ddd;
     }
 
     /* Styling for the actions column */
@@ -227,159 +201,203 @@
         background-color: #ffffff;
         color: #0a4521;
     }
+
     /* Modal container */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1001; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
-    justify-content: center;
-    align-items: center;
-    display: flex; /* Flexbox for centering */
-}
+    .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1001;
+        /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Black background with opacity */
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        /* Flexbox for centering */
+    }
 
-/* Modal content */
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 300px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
-}
+    /* Modal content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 300px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
+    }
 
-/* Modal actions */
-.modal-actions {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
+    /* Modal actions */
+    .modal-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
 
-.modal-actions button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
+    .modal-actions button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
-#confirmDelete {
-    background-color: #cc0000;
-    color: #ffffff;
-}
+    #confirmDelete {
+        background-color: #cc0000;
+        color: #ffffff;
+    }
 
-#cancelDelete {
-    background-color: #cccccc;
-    color: #333333;
-}
+    #cancelDelete {
+        background-color: #cccccc;
+        color: #333333;
+    }
 
-#confirmDelete:hover {
-    background-color: #ff0000;
-}
+    #confirmDelete:hover {
+        background-color: #ff0000;
+    }
 
-#cancelDelete:hover {
-    background-color: #bbbbbb;
-}
-#deleteModal {
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Optional: for a semi-transparent background */
-    justify-content: center;
-    align-items: center;
-}
+    #cancelDelete:hover {
+        background-color: #bbbbbb;
+    }
 
-#exportModal {
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure it's above other elements */
-}
+    #deleteModal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Optional: for a semi-transparent background */
+        justify-content: center;
+        align-items: center;
+    }
 
-.export-modal-content {
-    background-color: #fefefe;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 300px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
-    text-align: center; /* Center the text inside the modal */
-}
+    #exportModal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        /* Ensure it's above other elements */
+    }
 
-.export-modal-content h2 {
-    margin-bottom: 20px;
-    font-size: 18px;
-    color: #333;
-}
+    .export-modal-content {
+        background-color: #fefefe;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 300px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        /* Center the text inside the modal */
+    }
 
-.export-modal-content button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 5px;
-    display: block;
-    width: 100%;
-    color: #ffffff;
-}
+    .export-modal-content h2 {
+        margin-bottom: 20px;
+        font-size: 18px;
+        color: #333;
+    }
 
-.export-modal-content button#exportCSV {
-    background-color: #007bff;
-}
+    .export-modal-content button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+        display: block;
+        width: 100%;
+        color: #ffffff;
+    }
 
-.export-modal-content button#exportExcel {
-    background-color: #28a745;
-}
+    .export-modal-content button#exportCSV {
+        background-color: #007bff;
+    }
 
-.export-modal-content button#exportPDF {
-    background-color: #dc3545;
-}
+    .export-modal-content button#exportExcel {
+        background-color: #28a745;
+    }
 
-.export-modal-content button:hover {
-    opacity: 0.9;
-}
+    .export-modal-content button#exportPDF {
+        background-color: #dc3545;
+    }
 
-#closeModal {
-    background-color: #6c757d;
-    color: #ffffff;
-    margin-top: 10px;
-}
-#openn{
-    background-color: green;
-    color: white;
-    border: 2px solid #0a4521;
-        /* Border color matching the theme */
+    .export-modal-content button:hover {
+        opacity: 0.9;
+    }
+
+    #closeModal {
+        background-color: #6c757d;
+        color: #ffffff;
+        margin-top: 10px;
+    }
+
+    /* Center and Style the Export Button */
+    #openn {
+        display: block;
+        /* Make the button block-level for centering */
+        margin: 20px auto;
+        /* Center horizontally with auto margins */
+        padding: 15px 30px;
+        /* Increase padding for a larger button */
+        font-size: 12px;
+        /* Increase font size */
+        font-family: 'Poppins', sans-serif;
+        /* Use Poppins font */
+        color: white;
+        /* Text color */
+        background-color: green;
+        /* Button background color */
+        border: 2px solid #0a4521;
+        /* Border color */
         border-radius: 8px;
         /* Rounded corners */
         outline: none;
         /* Remove default outline */
         cursor: pointer;
-        /* Change cursor to pointer */
+        /* Pointer cursor on hover */
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
-    
-}
+        /* Subtle shadow */
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        /* Smooth transitions for hover and active states */
+    }
 
+    /* Hover Effect */
+    #openn:hover {
+        background-color: darkgreen;
+        /* Darker green on hover */
+    }
+
+    /* Active Effect */
+    #openn:active {
+        background-color: #004d00;
+        /* Even darker green when active */
+        transform: scale(0.98);
+        /* Slightly shrink the button when pressed */
+    }
 </style>
 
 <body>
     <!-- Navigation Sidebar -->
     <div th:insert="navigation"></div>
-
+    <div class="topBar">
+        <!-- <h2 style="text-align: center; padding: 10px;">Canal Sugar</h2>
+        <span class="menu-btn bx bx-menu" style="font-size: 24px; cursor: pointer;"></span> -->
+    </div>
     <div class="view">
         <h1 id="h1h1">CANAL SUGAR ASSETS:</h1>
 
@@ -425,20 +443,20 @@
         </table>
 
         <!-- Export Options -->
-        <button id="openn" onclick="openExportModal()">Open Export Modal</button>
+        <button id="openn" onclick="openExportModal()">Export Record</button>
 
-<!-- Export Modal HTML (as before) -->
-<div id="exportModal" class="file-type-modal">
-    <div class="export-modal-content">
-        <h2>Select File Type</h2>
-        <div class="file-type-modal-actions">
-            <button id="exportCSV" onclick="exportToCSV()">Export to CSV</button>
-            <button id="exportExcel" onclick="exportToExcel()">Export to Excel</button>
-            <button id="exportPDF" onclick="exportToPDF()">Export to PDF</button>
+        <!-- Export Modal HTML (as before) -->
+        <div id="exportModal" class="file-type-modal">
+            <div class="export-modal-content">
+                <h2>Select File Type</h2>
+                <div class="file-type-modal-actions">
+                    <button id="exportCSV" onclick="exportToCSV()">Export to CSV</button>
+                    <button id="exportExcel" onclick="exportToExcel()">Export to Excel</button>
+                    <button id="exportPDF" onclick="exportToPDF()">Export to PDF</button>
+                </div>
+                <button id="closeModal" onclick="closeExportModal()">Close</button>
+            </div>
         </div>
-        <button id="closeModal" onclick="closeExportModal()">Close</button>
-    </div>
-</div>
         <!-- Modal Structure -->
         <div id="deleteModal" class="modal">
             <div class="modal-content">
@@ -456,27 +474,27 @@
 
     <script>
 
-function openExportModal() {
-        document.getElementById('exportModal').style.display = 'flex';
-    }
+        function openExportModal() {
+            document.getElementById('exportModal').style.display = 'flex';
+        }
 
-    function closeExportModal() {
-        document.getElementById('exportModal').style.display = 'none';
-    }
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
 
-          const exportBtn = document.querySelector('#exportBtn');
+        const exportBtn = document.querySelector('#exportBtn');
         const fileTypeModal = document.querySelector('#fileTypeModal');
         const closeModalBtn = document.querySelector('#closeModal');
 
-        exportBtn.addEventListener('click', function() {
+        exportBtn.addEventListener('click', function () {
             fileTypeModal.style.display = 'flex';
         });
 
-        closeModalBtn.addEventListener('click', function() {
+        closeModalBtn.addEventListener('click', function () {
             fileTypeModal.style.display = 'none';
         });
 
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             if (event.target === fileTypeModal) {
                 fileTypeModal.style.display = 'none';
             }
@@ -559,67 +577,67 @@ function openExportModal() {
         }
 
         function exportToPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
 
-    // Load the logo image
-    const logo = new Image();
-    logo.src = '../images/canalsugar.png'; // Replace with the correct path to your logo
+            // Load the logo image
+            const logo = new Image();
+            logo.src = '../images/canalsugar.png'; // Replace with the correct path to your logo
 
-    logo.onload = function () {
-        const imgWidth = 50; // Adjust the image width
-        const imgHeight = 30; // Adjust the image height
-        const pageWidth = doc.internal.pageSize.getWidth();
-        const xOffset = (pageWidth - imgWidth) / 2; // Center the image
+            logo.onload = function () {
+                const imgWidth = 50; // Adjust the image width
+                const imgHeight = 30; // Adjust the image height
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const xOffset = (pageWidth - imgWidth) / 2; // Center the image
 
-        // Add the logo to the PDF
-        doc.addImage(logo, 'PNG', xOffset, 10, imgWidth, imgHeight); // Position and size of the logo
+                // Add the logo to the PDF
+                doc.addImage(logo, 'PNG', xOffset, 10, imgWidth, imgHeight); // Position and size of the logo
 
-        // Add the title below the logo
-        doc.setFontSize(18);
-        doc.setTextColor(22, 93, 10); // Dark green color
-        doc.text('CANAL SUGAR ASSET REPORT', pageWidth / 2, imgHeight + 25, { align: 'center' }); // Center the title
+                // Add the title below the logo
+                doc.setFontSize(18);
+                doc.setTextColor(22, 93, 10); // Dark green color
+                doc.text('CANAL SUGAR ASSET REPORT', pageWidth / 2, imgHeight + 25, { align: 'center' }); // Center the title
 
-        // Add some space between the title and the table
-        doc.setFontSize(12);
-        doc.text('', 14, imgHeight + 35);
+                // Add some space between the title and the table
+                doc.setFontSize(12);
+                doc.text('', 14, imgHeight + 35);
 
-        // Initialize the table data
-        let data = [];
-        let headers = [];
+                // Initialize the table data
+                let data = [];
+                let headers = [];
 
-        // Extract the headers
-        headers = Array.from(document.querySelectorAll('thead th:not(:last-child)'))
-            .map(header => header.innerText);
-        data.push(headers);
+                // Extract the headers
+                headers = Array.from(document.querySelectorAll('thead th:not(:last-child)'))
+                    .map(header => header.innerText);
+                data.push(headers);
 
-        // Extract visible rows
-        const rows = document.querySelectorAll('#assetTableBody tr');
-        rows.forEach(function (row) {
-            if (row.style.display !== 'none') {
-                let cols = Array.from(row.querySelectorAll('td:not(:last-child)'))
-                    .map(col => col.innerText);
-                data.push(cols);
-            }
-        });
+                // Extract visible rows
+                const rows = document.querySelectorAll('#assetTableBody tr');
+                rows.forEach(function (row) {
+                    if (row.style.display !== 'none') {
+                        let cols = Array.from(row.querySelectorAll('td:not(:last-child)'))
+                            .map(col => col.innerText);
+                        data.push(cols);
+                    }
+                });
 
-        // Use autoTable to add the table to the PDF
-        doc.autoTable({
-            startY: imgHeight + 40, // Start the table after the title and logo
-            head: [data[0]],
-            body: data.slice(1),
-            headStyles: {
-                fillColor: [22, 93, 10] // Dark green color for header cells
-            },
-            styles: {
-                fontSize: 10, // Adjust font size
-            }
-        });
+                // Use autoTable to add the table to the PDF
+                doc.autoTable({
+                    startY: imgHeight + 40, // Start the table after the title and logo
+                    head: [data[0]],
+                    body: data.slice(1),
+                    headStyles: {
+                        fillColor: [22, 93, 10] // Dark green color for header cells
+                    },
+                    styles: {
+                        fontSize: 10, // Adjust font size
+                    }
+                });
 
-        // Save the PDF
-        doc.save('assets_report.pdf');
-    };
-}
+                // Save the PDF
+                doc.save('assets_report.pdf');
+            };
+        }
 
 
 
@@ -628,35 +646,35 @@ function openExportModal() {
             exportToPDF();
         };
 
-        document.addEventListener('DOMContentLoaded', function() {
-    const deleteLinks = document.querySelectorAll('#delete');
-    const modal = document.getElementById('deleteModal');
-    const confirmDeleteBtn = document.getElementById('confirmDelete');
-    const cancelDeleteBtn = document.getElementById('cancelDelete');
-    let deleteUrl = '';
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteLinks = document.querySelectorAll('#delete');
+            const modal = document.getElementById('deleteModal');
+            const confirmDeleteBtn = document.getElementById('confirmDelete');
+            const cancelDeleteBtn = document.getElementById('cancelDelete');
+            let deleteUrl = '';
 
-    deleteLinks.forEach(function(link) {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
-            deleteUrl = this.href; // Store the delete URL
-            modal.style.display = 'flex'; // Show the modal
+            deleteLinks.forEach(function (link) {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    deleteUrl = this.href; // Store the delete URL
+                    modal.style.display = 'flex'; // Show the modal
+                });
+            });
+
+            confirmDeleteBtn.addEventListener('click', function () {
+                window.location.href = deleteUrl; // Navigate to the delete URL
+            });
+
+            cancelDeleteBtn.addEventListener('click', function () {
+                modal.style.display = 'none';
+            });
+
+            window.onclick = function (event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
         });
-    });
-
-    confirmDeleteBtn.addEventListener('click', function() {
-        window.location.href = deleteUrl; // Navigate to the delete URL
-    });
-
-    cancelDeleteBtn.addEventListener('click', function() {
-        modal.style.display = 'none'; 
-    });
-
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    };
-});
 
 
     </script>

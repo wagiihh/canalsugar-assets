@@ -1,53 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>View Users</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
     <link rel="stylesheet" href="../css/admin.css">
 </head>
 <style>
     .top-bar {
-        width: calc(100% - 250px);
-        height: 50px;
-        background-color: #f4f4f4;
-        color: #fff;
-        position: fixed;
-        top: 0;
-        left: 250px;
-        z-index: 1000;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        display: none;
     }
 
-    .sidebar {
-        width: 250px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100%;
-        background-color: #f4f4f4;
-        border-right: 1px solid #ddd;
-        padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        z-index: 999;
-    }
 
-    .sidebar a {
-        display: block;
-        padding: 10px;
-        margin-bottom: 10px;
-        color: #333;
-        text-decoration: solid;
-        border-radius: 4px;
-        transition: background-color 0.3s, color 0.3s; 
-    }
 
-    .sidebar a:hover {
-        background-color: #165d0a; 
-        color: #ffffff;
-    }
 
     body {
         background-image: url('../images/white.jpg');
@@ -56,8 +25,8 @@
         margin-top: 50px;
     }
 
-    /* Styling for the view div */
-    .view {
+   /* Styling for the view div */
+   .view {
         position: relative;
         width: 1170px;
         margin: 20px;
@@ -65,7 +34,9 @@
         margin-left: 40px;
         border: 2px solid rgb(242, 230, 230);
         top: 50px;
-        background-color: #ddd;
+        background-color: #ffffff;
+        border: 2px solid #34ff2d;
+        /* Light Green */
         padding: 20px;
         box-sizing: border-box;
     }
@@ -74,15 +45,16 @@
     h1#h1h1 {
         font-size: 24px;
         color: #165d0a;
-        background-color: #ddd;
-        left: 300px;
+        background-color: #ffffff;
+        margin-bottom: 20px;
     }
 
     /* Styling for the table */
     table.table {
         width: 100%;
-        background-color: #ddd;
+        background-color: #ffffff;
         margin-top: 20px;
+        border-collapse: collapse;
     }
 
     /* Styling for the table header */
@@ -95,9 +67,11 @@
 
     /* Styling for the table body cells */
     table.table tbody td {
-        padding: 5px;
+        padding: 10px;
         text-align: center;
+        border-bottom: 2px solid #ddd;
     }
+
 
     /* Styling for the actions column */
     table.table tbody td:last-child {
@@ -123,22 +97,190 @@
         padding: 5px 10px;
     }
 
+    .search-filter-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
     /* Search bar styling */
     #searchBar {
-        width: 40%;
+        width: 48%;
         padding: 10px;
-        margin-bottom: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
         font-size: 16px;
+        box-sizing: border-box;
     }
+
+    /* Style for the filter container */
+    .form-group {
+        width: 48%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    /* Style for the label */
+    .form-group label {
+        margin-right: 10px;
+        font-size: 16px;
+        color: #165d0a;
+        font-weight: bold;
+    }
+
+    /* Style for the select dropdown */
+    #departmentFilter {
+        width: 200px;
+        /* Adjusted width */
+        padding: 8px 12px;
+        /* Add padding for a comfortable feel */
+        font-size: 16px;
+        /* Increase font size */
+        color: #0a4521;
+        /* Text color */
+        background-color: #f0f0f0;
+        /* Light background color */
+        border: 2px solid #0a4521;
+        /* Border color matching the theme */
+        border-radius: 8px;
+        /* Rounded corners */
+        outline: none;
+        /* Remove default outline */
+        cursor: pointer;
+        /* Change cursor to pointer */
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        /* Subtle shadow for depth */
+        transition: all 0.3s ease;
+        /* Smooth transition for hover effects */
+    }
+
+    /* Hover effect for the select dropdown */
+    #departmentFilter:hover {
+        background-color: #e0e0e0;
+        /* Slightly darker background on hover */
+        border-color: #165d0a;
+        /* Darker border on hover */
+    }
+
+    /* Focus effect for the select dropdown */
+    #departmentFilter:focus {
+        border-color: #008000;
+        /* Green border when focused */
+        background-color: #ffffff;
+        /* White background when focused */
+    }
+
+    /* Add additional padding and space for the dropdown options */
+    #departmentFilter option {
+        padding: 10px;
+        background-color: #ffffff;
+        color: #0a4521;
+    }
+       /* Modal container */
+       .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1001;
+        /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Black background with opacity */
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        /* Flexbox for centering */
+    }
+
+    /* Modal content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 300px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Modal actions */
+    .modal-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .modal-actions button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #confirmDelete {
+        background-color: #cc0000;
+        color: #ffffff;
+    }
+
+    #cancelDelete {
+        background-color: #cccccc;
+        color: #333333;
+    }
+
+    #confirmDelete:hover {
+        background-color: #ff0000;
+    }
+
+    #cancelDelete:hover {
+        background-color: #bbbbbb;
+    }
+
+    #deleteModal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Optional: for a semi-transparent background */
+        justify-content: center;
+        align-items: center;
+    }
+    .topBar {
+        width: calc(100% - 260px);
+        height: 50px;
+        background-color: white;
+        color: #165d0a;
+        /* Dark green text */
+        position: fixed;
+        top: 0;
+        left: 260px;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
 </style>
+
 <body>
     <div th:include="navigation"></div>
-
+    <div class="topBar">
+        <!-- <h2 style="text-align: center; padding: 10px;">Canal Sugar</h2>
+        <span class="menu-btn bx bx-menu" style="font-size: 24px; cursor: pointer;"></span> -->
+    </div>
     <div class="view">
         <h1 id="h1h1">CANAL SUGAR USERS: </h1>
-
+        <div class="search-filter-container">
         <!-- Search bar -->
         <input type="text" id="searchBar" placeholder="Search for users..." onkeyup="filterUsers()">
 
@@ -146,9 +288,12 @@
             <label for="departmentFilter">Filter by department:</label>
             <select id="departmentFilter" class="form-control" onchange="filterUsers()">
                 <option value="all">All Departments</option>
-                <option th:each="dept : ${departments}" th:value="${dept.Departmentname}" th:text="${dept.Departmentname}"></option>
+                <option th:each="dept : ${departments}" th:value="${dept.Departmentname}"
+                    th:text="${dept.Departmentname}"></option>
             </select>
         </div>
+        </div>
+        
 
         <table class="table table-dark">
             <thead>
@@ -177,6 +322,17 @@
                 </tr>
             </tbody>
         </table>
+        <!-- Modal Structure -->
+        <div id="deleteModal" class="modal">
+            <div class="modal-content">
+                <h2>Confirm Deletion</h2>
+                <p>This asset deletion might delete other records</p>
+                <div class="modal-actions">
+                    <button id="confirmDelete">Proceed and Delete</button>
+                    <button id="cancelDelete">Cancel</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -185,7 +341,7 @@
             const selectedDepartment = document.getElementById('departmentFilter').value.toLowerCase();
             const rows = document.querySelectorAll('#userTableBody tr');
 
-            rows.forEach(function(row) {
+            rows.forEach(function (row) {
                 const department = row.querySelector('.departmentCell').textContent.toLowerCase();
                 const firstName = row.cells[1].textContent.toLowerCase();
                 const lastName = row.cells[2].textContent.toLowerCase();
@@ -194,9 +350,9 @@
 
                 // Check if the row matches the search term
                 const matchesSearch = firstName.includes(searchTerm) ||
-                                      lastName.includes(searchTerm) ||
-                                      email.includes(searchTerm) ||
-                                      number.includes(searchTerm);
+                    lastName.includes(searchTerm) ||
+                    email.includes(searchTerm) ||
+                    number.includes(searchTerm);
 
                 // Check if the row matches the selected department
                 const matchesDepartment = (selectedDepartment === 'all') || (department === selectedDepartment);
@@ -205,6 +361,38 @@
                 row.style.display = (matchesSearch && matchesDepartment) ? '' : 'none';
             });
         }
+        document.addEventListener('DOMContentLoaded', function () {
+            const deleteLinks = document.querySelectorAll('#delete');
+            const modal = document.getElementById('deleteModal');
+            const confirmDeleteBtn = document.getElementById('confirmDelete');
+            const cancelDeleteBtn = document.getElementById('cancelDelete');
+            let deleteUrl = '';
+
+            deleteLinks.forEach(function (link) {
+                link.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    deleteUrl = this.href; // Store the delete URL
+                    modal.style.display = 'flex'; // Show the modal
+                });
+            });
+
+            confirmDeleteBtn.addEventListener('click', function () {
+                window.location.href = deleteUrl; // Navigate to the delete URL
+            });
+
+            cancelDeleteBtn.addEventListener('click', function () {
+                modal.style.display = 'none';
+            });
+
+            window.onclick = function (event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            };
+        });
+
+
     </script>
 </body>
+
 </html>

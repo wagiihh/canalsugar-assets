@@ -10,172 +10,144 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script> 
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
     <link rel="stylesheet" href="../css/admin.css">
 </head>
 <style>
-    /* Existing styles */
     body {
         background-image: url('../images/white.jpg');
+        font-family: 'Poppins', sans-serif;
         background-position: center;
         background-size: contain;
-        margin-top: 50px; /* Adjust margin to account for the top bar */
+        margin-top: 50px;
     }
+
     .top-bar {
-        padding-left: 500px;
-        margin-left: 10px;
+        display: none;
     }
+
+    .topBar {
+        width: calc(100% - 260px);
+        height: 50px;
+        background-color: white;
+        color: #165d0a;
+        position: fixed;
+        top: 0;
+        left: 260px;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
     .view {
         position: relative;
         width: 1170px;
         margin: 20px;
-        left: 270px; 
+        left: 270px;
         margin-left: 40px;
         border: 2px solid rgb(242, 230, 230);
         top: 50px;
-        background-color: #ddd;
+        background-color: #ffffff;
+        border: 2px solid #34ff2d;
+        padding: 20px;
+        box-sizing: border-box;
     }
+
     h1#h1h1 {
         font-size: 24px;
         color: #165d0a;
-        background-color: #ddd;
-        left: 300px;
+        background-color: #ffffff;
+        margin-bottom: 20px;
     }
+
     table.table {
         width: 100%;
-        background-color: #ddd;
+        background-color: #ffffff;
+        margin-top: 20px;
+        border-collapse: collapse;
     }
+
     table.table thead th {
         background-color: #0a4521;
         color: #ffffff;
         padding: 10px;
-        text-align: center;  /* Center-align header text */
+        text-align: center;
     }
+
     table.table tbody td {
-        padding: 5px;
-        text-align: center;  /* Center-align data cell text */
+        padding: 10px;
+        text-align: center;
+        border-bottom: 2px solid #ddd;
     }
+
     table.table tbody td:last-child {
         white-space: nowrap;
     }
+
     table.table tbody td a {
         color: #ffffff;
         text-decoration: none;
         margin-right: 5px;
     }
+
     table.table tbody td a#edit {
         background-color: #0066cc;
         padding: 5px 10px;
+        border-radius: 4px;
     }
+
     table.table tbody td a#delete {
         background-color: #cc0000;
         padding: 5px 10px;
+        border-radius: 4px;
     }
+
+    .search-filter-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    /* Search bar styling */
     #searchBar {
-        width: 40%;
+        width: 48%;
         padding: 10px;
-        margin-bottom: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
         font-size: 16px;
+        box-sizing: border-box;
     }
+
+    /* Style for the filter container */
+    .form-group {
+        width: 48%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    /* Style for the label */
+    .form-group label {
+        margin-right: 10px;
+        font-size: 16px;
+        color: #165d0a;
+        font-weight: bold;
+    }
+
     /* Style for the select dropdown */
     #assetTypeFilter {
-        width: 200px;  /* Adjusted width */
-        padding: 8px 12px;  /* Add padding for a comfortable feel */
-        font-size: 16px;  /* Increase font size */
-        color: #0a4521;  /* Text color */
-        background-color: #f0f0f0;  /* Light background color */
-        border: 2px solid #0a4521;  /* Border color matching the theme */
-        border-radius: 8px;  /* Rounded corners */
-        outline: none;  /* Remove default outline */
-        cursor: pointer;  /* Change cursor to pointer */
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);  /* Subtle shadow for depth */
-        transition: all 0.3s ease;  /* Smooth transition for hover effects */
-    }
-
-    /* Hover effect for the select dropdown */
-    #assetTypeFilter:hover {
-        background-color: #e0e0e0;  /* Slightly darker background on hover */
-        border-color: #165d0a;  /* Darker border on hover */
-    }
-
-    /* Focus effect for the select dropdown */
-    #assetTypeFilter:focus {
-        border-color: #008000;  /* Green border when focused */
-        background-color: #ffffff;  /* White background when focused */
-    }
-
-    /* Add additional padding and space for the dropdown options */
-    #assetTypeFilter option {
-        padding: 10px;
-        background-color: #ffffff;
+        width: 200px;
+        /* Adjusted width */
+        padding: 8px 12px;
+        /* Add padding for a comfortable feel */
+        font-size: 16px;
+        /* Increase font size */
         color: #0a4521;
-    }
-    #exportModal {
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure it's above other elements */
-}
-
-.export-modal-content {
-    background-color: #fefefe;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 300px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
-    text-align: center; /* Center the text inside the modal */
-}
-
-.export-modal-content h2 {
-    margin-bottom: 20px;
-    font-size: 18px;
-    color: #333;
-}
-
-.export-modal-content button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin: 5px;
-    display: block;
-    width: 100%;
-    color: #ffffff;
-}
-
-.export-modal-content button#exportCSV {
-    background-color: #007bff;
-}
-
-.export-modal-content button#exportExcel {
-    background-color: #28a745;
-}
-
-.export-modal-content button#exportPDF {
-    background-color: #dc3545;
-}
-
-.export-modal-content button:hover {
-    opacity: 0.9;
-}
-
-#closeModal {
-    background-color: #6c757d;
-    color: #ffffff;
-    margin-top: 10px;
-}
-#openn{
-    background-color: green;
-    color: white;
-    border: 2px solid #0a4521;
+        /* Text color */
+        background-color: #f0f0f0;
+        /* Light background color */
+        border: 2px solid #0a4521;
         /* Border color matching the theme */
         border-radius: 8px;
         /* Rounded corners */
@@ -184,8 +156,190 @@
         cursor: pointer;
         /* Change cursor to pointer */
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        /* Subtle shadow for depth */
+        transition: all 0.3s ease;
+        /* Smooth transition for hover effects */
+    }
+
+    /* Hover effect for the select dropdown */
+    #assetTypeFilter:hover {
+        background-color: #e0e0e0;
+        /* Slightly darker background on hover */
+        border-color: #165d0a;
+        /* Darker border on hover */
+    }
+
+    /* Focus effect for the select dropdown */
+    #assetTypeFilter:focus {
+        border-color: #008000;
+        /* Green border when focused */
+        background-color: #ffffff;
+        /* White background when focused */
+    }
+
+    /* Add additional padding and space for the dropdown options */
+    #assetTypeFilter option {
+        padding: 10px;
+        background-color: #ffffff;
+        color: #0a4521;
+    }
+
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1001;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 300px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: space-between;
         margin-top: 20px;
+    }
+
+    .modal-actions button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #confirmDelete {
+        background-color: #cc0000;
+        color: #ffffff;
+    }
+
+    #cancelDelete {
+        background-color: #cccccc;
+        color: #333333;
+    }
+
+    #confirmDelete:hover {
+        background-color: #ff0000;
+    }
+
+    #cancelDelete:hover {
+        background-color: #bbbbbb;
+    }
+
+    #deleteModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    #exportModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+
+    .export-modal-content {
+        background-color: #fefefe;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 300px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .export-modal-content h2 {
+        margin-bottom: 20px;
+        font-size: 18px;
+        color: #333;
+    }
+
+    .export-modal-content button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+        display: block;
+        width: 100%;
+        color: #ffffff;
+    }
+
+    .export-modal-content button#exportCSV {
+        background-color: #007bff;
+    }
+
+    .export-modal-content button#exportExcel {
+        background-color: #28a745;
+    }
+
+    .export-modal-content button#exportPDF {
+        background-color: #dc3545;
+    }
+
+    .export-modal-content button:hover {
+        opacity: 0.8;
+    }
     
+#closeModal {
+    background-color: #6c757d;
+    color: #ffffff;
+    margin-top: 10px;
+}
+/* Center and Style the Export Button */
+#openn {
+    display: block; /* Make the button block-level for centering */
+    margin: 20px auto; /* Center horizontally with auto margins */
+    padding: 15px 30px; /* Increase padding for a larger button */
+    font-size: 12px; /* Increase font size */
+    font-family: 'Poppins', sans-serif; /* Use Poppins font */
+    color: white; /* Text color */
+    background-color: green; /* Button background color */
+    border: 2px solid #0a4521; /* Border color */
+    border-radius: 8px; /* Rounded corners */
+    outline: none; /* Remove default outline */
+    cursor: pointer; /* Pointer cursor on hover */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions for hover and active states */
+}
+
+/* Hover Effect */
+#openn:hover {
+    background-color: darkgreen; /* Darker green on hover */
+}
+
+/* Active Effect */
+#openn:active {
+    background-color: #004d00; /* Even darker green when active */
+    transform: scale(0.98); /* Slightly shrink the button when pressed */
 }
 </style>
 <body>
@@ -194,16 +348,18 @@
         <h1 id="h1h1">CANAL SUGAR ASSIGNED ASSET DEVICES:</h1>
 
         <!-- Search Bar -->
-        <div class="search-bar">
-            <input type="text" id="searchBar" placeholder="Search by asset name or user" oninput="filterAssets()" />
-        </div>
+        <div class="search-filter-container">
+            <!-- Search bar -->
+            <input type="text" id="searchBar" placeholder="Search for assets..." onkeyup="filterAssets()">
 
-        <div class="form-group">
-            <label for="assetTypeFilter">Filter by Asset Type:</label>
-            <select id="assetTypeFilter" class="form-control" onchange="filterAssets()">
-                <option value="all">All Asset Types</option>
-                <option th:each="type : ${assetTypes}" th:value="${type.name}" th:text="${type.name}"></option>
-            </select>
+            <!-- Dropdown for filtering by Asset Type -->
+            <div class="form-group">
+                <label for="assetTypeFilter">Filter by Asset Type:</label>
+                <select id="assetTypeFilter" class="form-control" onchange="filterAssets()">
+                    <option value="all">All Asset Types</option>
+                    <option th:each="type : ${assetTypes}" th:value="${type.name}" th:text="${type.name}"></option>
+                </select>
+            </div>
         </div>
 
         <table class="table table-dark">
@@ -232,7 +388,7 @@
             </tbody>
         </table>
 
-                <button id="openn" onclick="openExportModal()">Open Export Modal</button>
+                <button id="openn" onclick="openExportModal()">Export Record</button>
 
                 <div id="exportModal" class="file-type-modal">
                     <div class="export-modal-content">
@@ -369,7 +525,7 @@
         // Add the title below the logo
         doc.setFontSize(18);
         doc.setTextColor(22, 93, 10); // Dark green color
-        doc.text('CANAL SUGAR ASSET REPORT', pageWidth / 2, imgHeight + 25, { align: 'center' }); // Center the title
+        doc.text('CANAL SUGAR ASSIGNED ASSET REPORT', pageWidth / 2, imgHeight + 25, { align: 'center' }); // Center the title
 
         // Add some space between the title and the table
         const startY = imgHeight + 35;

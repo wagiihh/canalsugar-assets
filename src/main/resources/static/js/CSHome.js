@@ -1,8 +1,9 @@
 const imageSlider = document.getElementById('imageSlider');
 const images = [
     '../images/Factory.jpg',
-    '../images/cstruck.png',
-    '../images/Sugar-factory.jpg',
+    '../images/testing.png',
+    '../images/white.jpg',
+    '../images/Sugar-factory.jpg'
 ];
 
 let currentIndex = 0;

@@ -1,40 +1,48 @@
-
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title> VIEW ASSET TYPES </title>
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
-    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
-    <link rel="stylesheet" href="../css/admin.css">
+  <title> VIEW ASSET TYPES </title>
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+  <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap">
+  <link rel="stylesheet" href="../css/admin.css">
 
 </head>
 <style>
+  body {
+    background-image: url('../images/white.jpg');
+    background-position: center;
+    background-size: contain;
+    margin-top: 50px;
+    /* Adjust margin to account for the top bar */
+  }
 
-    body {
-        background-image: url('../images/white.jpg');
-        background-position: center;
-        background-size: contain;
-        margin-top: 50px; /* Adjust margin to account for the top bar */
-    }
-    .modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1001; /* Sit on top */
+  .modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1001;
+    /* Sit on top */
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Black background with opacity */
     justify-content: center;
     align-items: center;
-    display: flex; /* Flexbox for centering */
-}
+    display: flex;
+    /* Flexbox for centering */
+  }
 
-/* Modal content */
-.modal-content {
+  /* Modal content */
+  .modal-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
@@ -42,206 +50,252 @@
     width: 300px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
-}
+  }
 
-/* Modal actions */
-.modal-actions {
+  /* Modal actions */
+  .modal-actions {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
-}
+  }
 
-.modal-actions button {
+  .modal-actions button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-}
+  }
 
-#confirmDelete {
+  #confirmDelete {
     background-color: #cc0000;
     color: #ffffff;
-}
+  }
 
-#cancelDelete {
+  #cancelDelete {
     background-color: #cccccc;
     color: #333333;
-}
+  }
 
-#confirmDelete:hover {
+  #confirmDelete:hover {
     background-color: #ff0000;
-}
+  }
 
-#cancelDelete:hover {
+  #cancelDelete:hover {
     background-color: #bbbbbb;
-}
-#deleteModal {
-    display: none; /* Hidden by default */
+  }
+
+  #deleteModal {
+    display: none;
+    /* Hidden by default */
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Optional: for a semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Optional: for a semi-transparent background */
     justify-content: center;
     align-items: center;
-}
- 
+  }
+
+  .topBar {
+    width: calc(100% - 220px);
+    /* Adjust width to fit the sidebar */
+    height: 60px;
+    /* Slightly taller for better visibility */
+    background-color: #ffffff;
+    /* White background */
+    color: #0a4521;
+    /* Dark green text */
+    position: fixed;
+    top: 0;
+    left: 220px;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 1.2rem;
+    /* Slightly larger text for visibility */
+  }
+
+  .top-bar {
+    display: none;
+  }
 </style>
+
 <body>
 
-    <div th:include="navigation">
-      
-    </div>
+  <div th:include="navigation">
 
-    <div class="view" >
+  </div>
 
-    
-   <h1 id="h1h1">CANAL SUGAR ASSET TYPES:  </h1>
+  <div class="view">
 
-   <table class="table table-dark">
-    <thead>
-      <tr>
-        <th>ASSET TYPE ID</th>
-        <th >ASSET TYPE NAME</th>
-        <th >ACTIONS</th>
-        
-      </tr>
-    </thead>
-    <tbody>
-      <tr th:each="asset : ${assetTypes}" >
-        
-        <td th:text="${asset.assettypeid}"></td>
-        <td th:text="${asset.name}"></td>
-<td>
-    <a id="edit"    th:href="@{'editassettype/' + ${asset.assettypeid}}">EDIT</a>
-    ||
-    <a id="delete"  th:href="@{'deleteassettype/' + ${asset.assettypeid}}">DELETE</a>
-</td>
-      </tr>
-      
-    </tbody>
-  </table>
-  <div id="deleteModal" class="modal">
-    <div class="modal-content">
+
+    <h1 id="h1h1">CANAL SUGAR ASSET TYPES: </h1>
+
+    <table class="table table-dark">
+      <thead>
+        <tr>
+          <th>ASSET TYPE ID</th>
+          <th>ASSET TYPE NAME</th>
+          <th>ACTIONS</th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="asset : ${assetTypes}">
+
+          <td th:text="${asset.assettypeid}"></td>
+          <td th:text="${asset.name}"></td>
+          <td>
+            <a id="edit" th:href="@{'editassettype/' + ${asset.assettypeid}}">EDIT</a>
+            ||
+            <a id="delete" th:href="@{'deleteassettype/' + ${asset.assettypeid}}">DELETE</a>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+    <div id="deleteModal" class="modal">
+      <div class="modal-content">
         <h2>Confirm Deletion</h2>
         <p>This asset type deletion might delete other records</p>
         <div class="modal-actions">
-            <button id="confirmDelete">Proceed and Delete</button>
-            <button id="cancelDelete">Cancel</button>
+          <button id="confirmDelete">Proceed and Delete</button>
+          <button id="cancelDelete">Cancel</button>
         </div>
+      </div>
     </div>
-</div>
-</div>
+  </div>
 </body>
 <style>
+      body {
+        background-image: url('../images/white.jpg');
+        font-family: 'Poppins', sans-serif;
+        background-position: center;
+        background-size: contain;
+        margin-top: 50px;
+        /* Adjust margin to account for the top bar */
+    }
+  /* Styling for the view div */
+  .view {
+    position: relative;
+    width: 1170px;
+    margin: 20px;
+    left: 270px;
+    margin-left: 40px;
+    border: 2px solid rgb(242, 230, 230);
+    top: 50px;
+    background-color: #ffffff;
+    border: 2px solid #34ff2d;
+    /* Light Green */
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  h1#h1h1 {
+        font-size: 24px;
+        color: #165d0a;
+        background-color: #ffffff;
+        margin-bottom: 20px;
+    }
+
+    /* Styling for the table */
+    table.table {
+        width: 100%;
+        background-color: #ffffff;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+    /* Styling for the table header */
+    table.table thead th {
+        background-color: #0a4521;
+        color: #ffffff;
+        padding: 10px;
+        text-align: center;
+    }
+
+    /* Styling for the table body cells */
+    table.table tbody td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 2px solid #ddd;
+    }
 
 
-       /* Styling for the view div */
-.view {
- position: relative;
-width:1170px;
-margin: 20px;
-left:270px; 
-margin-left: 40px;
-border: 2px solid rgb(242, 230, 230);
-top: 50px;
-background-color: #ddd;
-}
+  /* Styling for the actions column */
+  table.table tbody td:last-child {
+    white-space: nowrap;
+  }
 
-/* Styling for the h1 element */
-h1#h1h1 {
-  font-size: 24px;
-  color: #165d0a;
-  background-color: #ddd;
-  left: 300px;
-  
-}
+  /* Styling for the edit and delete links */
+  table.table tbody td a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-right: 5px;
+  }
 
-/* Styling for the table */
-table.table {
-  width: 100%;
-  background-color: #ddd;
-}
+  /* Styling for the edit link */
+  table.table tbody td a#edit {
+    background-color: #0066cc;
+    padding: 5px 10px;
+  }
 
-/* Styling for the table header */
-table.table thead th {
-  background-color: #ffffff;
-  color: #ffffff;
-  padding: 10px;
-}
+  /* Styling for the delete link */
+  table.table tbody td a#delete {
+    background-color: #cc0000;
+    padding: 5px 10px;
+  }
 
-/* Styling for the table body */
-table.table tbody td {
-  padding: 5px;
-}
-
-/* Styling for the actions column */
-table.table tbody td:last-child {
-  white-space: nowrap;
-}
-
-/* Styling for the edit and delete links */
-table.table tbody td a {
-  color: #ffffff;
-  text-decoration: none;
-  margin-right: 5px;
-}
-
-/* Styling for the edit link */
-table.table tbody td a#edit {
-  background-color: #0066cc;
-  padding: 5px 10px;
-}
-
-/* Styling for the delete link */
-table.table tbody td a#delete {
-  background-color: #cc0000;
-  padding: 5px 10px;
-}
-/* Styling for the table header */
-table.table thead th {
+  /* Styling for the table header */
+  table.table thead th {
     background-color: #0a4521;
     color: #ffffff;
     padding: 10px;
-    text-align: center;  /* Center-align header text */
-}
+    text-align: center;
+    /* Center-align header text */
+  }
 
-/* Styling for the table body cells */
-table.table tbody td {
+  /* Styling for the table body cells */
+  table.table tbody td {
     padding: 5px;
-    text-align: center;  /* Center-align data cell text */
-}
+    text-align: center;
+    /* Center-align data cell text */
+  }
 </style>
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
     const deleteLinks = document.querySelectorAll('#delete');
     const modal = document.getElementById('deleteModal');
     const confirmDeleteBtn = document.getElementById('confirmDelete');
     const cancelDeleteBtn = document.getElementById('cancelDelete');
     let deleteUrl = '';
 
-    deleteLinks.forEach(function(link) {
-        link.addEventListener('click', function(event) {
-            event.preventDefault();
-            deleteUrl = this.href; // Store the delete URL
-            modal.style.display = 'flex'; // Show the modal
-        });
+    deleteLinks.forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        event.preventDefault();
+        deleteUrl = this.href; // Store the delete URL
+        modal.style.display = 'flex'; // Show the modal
+      });
     });
 
-    confirmDeleteBtn.addEventListener('click', function() {
-        window.location.href = deleteUrl; // Navigate to the delete URL
+    confirmDeleteBtn.addEventListener('click', function () {
+      window.location.href = deleteUrl; // Navigate to the delete URL
     });
 
-    cancelDeleteBtn.addEventListener('click', function() {
-        modal.style.display = 'none'; 
+    cancelDeleteBtn.addEventListener('click', function () {
+      modal.style.display = 'none';
     });
 
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
+    window.onclick = function (event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
     };
-});
+  });
 </script>
+
 </html>

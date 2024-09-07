@@ -7,230 +7,414 @@
     <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <link rel="stylesheet" href="../css/admin.css">
-</head>
+    <!-- Poppins Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url('../images/white.jpg');
+            background-position: center;
+            background-size: contain;
+            margin-top: 50px;
+        }
 
+        /* Sidebar and Top Bar Styles */
+        .top-bar {
+            width: calc(100% - 250px);
+            height: 50px;
+            background-color: #f4f4f4;
+            color: #fff;
+            position: fixed;
+            top: 0;
+            left: 250px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-<style>
-    body {
-        background-image: url('../images/white.jpg');
-        background-position: center;
-        background-size: contain;
-        margin-top: 50px;
-        /* Adjust margin to account for the top bar */
-    }
+        .sidebar {
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #f4f4f4;
+            border-right: 1px solid #ddd;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+        }
 
-    /* Sidebar and Top Bar Styles */
-    .top-bar {
-        width: calc(100% - 250px);
-        /* Adjust to fit the sidebar width */
-        height: 50px;
-        /* Height of the top bar */
-        background-color: #f4f4f4;
-        /* Background color of the top bar */
-        color: #fff;
-        /* Text color */
+        .sidebar a {
+            display: block;
+            padding: 10px;
+            margin-bottom: 10px;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #165d0a;
+            color: #ffffff;
+        }
+
+        /* Styling for the view div */
+        .view {
+            position: relative;
+            width: 1170px;
+            margin: 20px;
+            left: 270px;
+            margin-left: 40px;
+            border: 2px solid #34ff2d; /* Light Green */
+            top: 50px;
+            background-color: #ffffff; /* White */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Styling for the h1 element */
+        h1#h1h1 {
+            font-size: 24px;
+            color: #165d0a; /* Dark Green */
+            background-color: #ffffff; /* White */
+            margin-bottom: 20px;
+        }
+
+        /* Styling for the table */
+        table.table {
+            width: 100%;
+            background-color: #ffffff; /* White */
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        /* Styling for the table header */
+        table.table thead th {
+            background-color: #165d0a; /* Dark Green */
+            color: #ffffff; /* White */
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Styling for the table body cells */
+        table.table tbody td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 2px solid #ddd; /* Light Gray */
+        }
+
+        /* Styling for the actions column */
+        table.table tbody td:last-child {
+            white-space: nowrap;
+        }
+
+        /* Styling for the edit and delete links */
+        table.table tbody td a {
+            color: #ffffff; /* White */
+            text-decoration: none;
+            margin-right: 5px;
+        }
+
+        /* Styling for the edit link */
+        table.table tbody td a#edit {
+            background-color: #0066cc; /* Blue */
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        /* Styling for the delete link */
+        table.table tbody td a#delete {
+            background-color: #cc0000; /* Red */
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        /* Search and Filter Container Styles */
+        .search-filter-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        /* Search bar styling */
+        #searchBar {
+            width: 48%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        /* Style for the filter container */
+        .form-group {
+            width: 48%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        /* Style for the label */
+        .form-group label {
+            margin-right: 10px;
+            font-size: 16px;
+            color: #165d0a; /* Dark Green */
+            font-weight: bold;
+        }
+
+        /* Style for the select dropdown */
+        #assetTypeFilter {
+            width: 200px;
+            padding: 8px 12px;
+            font-size: 16px;
+            color: #0a4521; /* Dark Green */
+            background-color: #f0f0f0; /* Light Gray */
+            border: 2px solid #0a4521; /* Dark Green */
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        /* Hover effect for the select dropdown */
+        #assetTypeFilter:hover {
+            background-color: #e0e0e0; /* Slightly Darker Gray */
+            border-color: #165d0a; /* Dark Green */
+        }
+
+        /* Focus effect for the select dropdown */
+        #assetTypeFilter:focus {
+            border-color: #008000; /* Green */
+            background-color: #ffffff; /* White */
+        }
+
+        /* Add additional padding and space for the dropdown options */
+        #assetTypeFilter option {
+            padding: 10px;
+            background-color: #ffffff; /* White */
+            color: #0a4521; /* Dark Green */
+        }
+        
+        .top-bar {
+            display: none;
+        }
+        
+        .topBar {
+            width: calc(100% - 260px);
+            height: 50px;
+            background-color: #ffffff; /* White */
+            color: #165d0a; /* Dark Green */
+            position: fixed;
+            top: 0;
+            left: 260px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .modal {
+        display: none;
+        /* Hidden by default */
         position: fixed;
+        /* Stay in place */
+        z-index: 1001;
+        /* Sit on top */
+        left: 0;
         top: 0;
-        left: 250px;
-        /* Start after the sidebar */
-        z-index: 1000;
-        /* Ensure it is above other content */
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        /* Optional shadow for better visibility */
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Black background with opacity */
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        /* Flexbox for centering */
     }
 
-    .sidebar {
-        width: 250px;
+    /* Modal content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 300px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Modal actions */
+    .modal-actions {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .modal-actions button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #confirmDelete {
+        background-color: #cc0000;
+        color: #ffffff;
+    }
+
+    #cancelDelete {
+        background-color: #cccccc;
+        color: #333333;
+    }
+
+    #confirmDelete:hover {
+        background-color: #ff0000;
+    }
+
+    #cancelDelete:hover {
+        background-color: #bbbbbb;
+    }
+
+    #deleteModal {
+        display: none;
+        /* Hidden by default */
         position: fixed;
         top: 0;
         left: 0;
-        height: 100%;
-        background-color: #f4f4f4;
-        border-right: 1px solid #ddd;
-        padding: 20px;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-        z-index: 999;
-        /* Ensure sidebar is below the top bar */
-    }
-
-    .sidebar a {
-        display: block;
-        padding: 10px;
-        margin-bottom: 10px;
-        color: #333;
-        text-decoration: none;
-        /* Changed from 'solid' to 'none' */
-        border-radius: 4px;
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-    .sidebar a:hover {
-        background-color: #165d0a;
-        color: #ffffff;
-    }
-
-    /* Styling for the view div */
-    .view {
-        position: relative;
-        width: 1170px;
-        margin: 20px;
-        left: 270px;
-        margin-left: 40px;
-        border: 2px solid rgb(242, 230, 230);
-        top: 50px;
-        background-color: #ddd;
-        padding: 20px;
-        box-sizing: border-box;
-    }
-
-    /* Styling for the h1 element */
-    h1#h1h1 {
-        font-size: 24px;
-        color: #165d0a;
-        background-color: #ddd;
-        margin-bottom: 20px;
-    }
-
-    /* Styling for the table */
-    table.table {
         width: 100%;
-        background-color: #ddd;
-        margin-top: 20px;
-        border-collapse: collapse;
-    }
-
-    /* Styling for the table header */
-    table.table thead th {
-        background-color: #0a4521;
-        color: #ffffff;
-        padding: 10px;
-        text-align: center;
-    }
-
-    /* Styling for the table body cells */
-    table.table tbody td {
-        padding: 10px;
-        text-align: center;
-        border-bottom: 1px solid #fff;
-    }
-
-    /* Styling for the actions column */
-    table.table tbody td:last-child {
-        white-space: nowrap;
-    }
-
-    /* Styling for the edit and delete links */
-    table.table tbody td a {
-        color: #ffffff;
-        text-decoration: none;
-        margin-right: 5px;
-    }
-
-    /* Styling for the edit link */
-    table.table tbody td a#edit {
-        background-color: #0066cc;
-        padding: 5px 10px;
-        border-radius: 4px;
-    }
-
-    /* Styling for the delete link */
-    table.table tbody td a#delete {
-        background-color: #cc0000;
-        padding: 5px 10px;
-        border-radius: 4px;
-    }
-
-    /* Search and Filter Container Styles */
-    .search-filter-container {
-        display: flex;
-        justify-content: space-between;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Optional: for a semi-transparent background */
+        justify-content: center;
         align-items: center;
-        flex-wrap: wrap;
+    }
+
+    #exportModal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        /* Ensure it's above other elements */
+    }
+
+    .export-modal-content {
+        background-color: #fefefe;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 300px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        /* Center the text inside the modal */
+    }
+
+    .export-modal-content h2 {
         margin-bottom: 20px;
+        font-size: 18px;
+        color: #333;
     }
 
-    /* Search bar styling */
-    #searchBar {
-        width: 48%;
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-        box-sizing: border-box;
+    .export-modal-content button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+        display: block;
+        width: 100%;
+        color: #ffffff;
     }
 
-    /* Style for the filter container */
-    .form-group {
-        width: 48%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
+    .export-modal-content button#exportCSV {
+        background-color: #007bff;
     }
 
-    /* Style for the label */
-    .form-group label {
-        margin-right: 10px;
-        font-size: 16px;
-        color: #165d0a;
-        font-weight: bold;
+    .export-modal-content button#exportExcel {
+        background-color: #28a745;
     }
 
-    /* Style for the select dropdown */
-    #assetTypeFilter {
-        width: 200px;
-        /* Adjusted width */
-        padding: 8px 12px;
-        /* Add padding for a comfortable feel */
-        font-size: 16px;
+    .export-modal-content button#exportPDF {
+        background-color: #dc3545;
+    }
+
+    .export-modal-content button:hover {
+        opacity: 0.9;
+    }
+
+    #closeModal {
+        background-color: #6c757d;
+        color: #ffffff;
+        margin-top: 10px;
+    }
+
+    /* Center and Style the Export Button */
+    #openn {
+        display: block;
+        /* Make the button block-level for centering */
+        margin: 20px auto;
+        /* Center horizontally with auto margins */
+        padding: 15px 30px;
+        /* Increase padding for a larger button */
+        font-size: 12px;
         /* Increase font size */
-        color: #0a4521;
+        font-family: 'Poppins', sans-serif;
+        /* Use Poppins font */
+        color: white;
         /* Text color */
-        background-color: #f0f0f0;
-        /* Light background color */
+        background-color: green;
+        /* Button background color */
         border: 2px solid #0a4521;
-        /* Border color matching the theme */
+        /* Border color */
         border-radius: 8px;
         /* Rounded corners */
         outline: none;
         /* Remove default outline */
         cursor: pointer;
-        /* Change cursor to pointer */
+        /* Pointer cursor on hover */
         box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        /* Subtle shadow for depth */
-        transition: all 0.3s ease;
-        /* Smooth transition for hover effects */
+        /* Subtle shadow */
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        /* Smooth transitions for hover and active states */
     }
 
-    /* Hover effect for the select dropdown */
-    #assetTypeFilter:hover {
-        background-color: #e0e0e0;
-        /* Slightly darker background on hover */
-        border-color: #165d0a;
-        /* Darker border on hover */
+    /* Hover Effect */
+    #openn:hover {
+        background-color: darkgreen;
+        /* Darker green on hover */
     }
 
-    /* Focus effect for the select dropdown */
-    #assetTypeFilter:focus {
-        border-color: #008000;
-        /* Green border when focused */
-        background-color: #ffffff;
-        /* White background when focused */
+    /* Active Effect */
+    #openn:active {
+        background-color: #004d00;
+        /* Even darker green when active */
+        transform: scale(0.98);
+        /* Slightly shrink the button when pressed */
     }
-
-    /* Add additional padding and space for the dropdown options */
-    #assetTypeFilter option {
-        padding: 10px;
-        background-color: #ffffff;
-        color: #0a4521;
-    }
-</style>
-
+    </style>
+</head>
 
 <body>
     <!-- Navigation Sidebar -->
     <div th:insert="navigation"></div>
-
+    
+    <div class="topBar">
+        <!-- <h2 style="text-align: center; padding: 10px;">Canal Sugar</h2>
+        <span class="menu-btn bx bx-menu" style="font-size: 24px; cursor: pointer;"></span> -->
+    </div>
     <div class="view">
         <h1 id="h1h1">CANAL SUGAR AVAILABLE ASSETS:</h1>
 
@@ -273,6 +457,21 @@
                 </tr>
             </tbody>
         </table>
+        <!-- Export Options -->
+        <button id="openn" onclick="openExportModal()">Export Record</button>
+
+        <!-- Export Modal HTML (as before) -->
+        <div id="exportModal" class="file-type-modal">
+            <div class="export-modal-content">
+                <h2>Select File Type</h2>
+                <div class="file-type-modal-actions">
+                    <button id="exportCSV" onclick="exportToCSV()">Export to CSV</button>
+                    <button id="exportExcel" onclick="exportToExcel()">Export to Excel</button>
+                    <button id="exportPDF" onclick="exportToPDF()">Export to PDF</button>
+                </div>
+                <button id="closeModal" onclick="closeExportModal()">Close</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -306,6 +505,139 @@
                 }
             });
         }
+
+        function openExportModal() {
+            document.getElementById('exportModal').style.display = 'flex';
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
+        const exportBtn = document.querySelector('#exportBtn');
+        const fileTypeModal = document.querySelector('#fileTypeModal');
+        const closeModalBtn = document.querySelector('#closeModal');
+
+
+        window.onclick = function (event) {
+            if (event.target === fileTypeModal) {
+                fileTypeModal.style.display = 'none';
+            }
+        };
+        function exportToCSV() {
+            const rows = document.querySelectorAll('#assetTableBody tr');
+            let csv = [];
+
+            // Extract the headers
+            let headers = Array.from(document.querySelectorAll('thead th:not(:last-child)'))
+                .map(header => header.innerText);
+            csv.push(headers.join(','));
+
+            // Extract visible rows
+            rows.forEach(function (row) {
+                if (row.style.display !== 'none') {
+                    let cols = Array.from(row.querySelectorAll('td:not(:last-child)'))
+                        .map(col => col.innerText);
+                    csv.push(cols.join(','));
+                }
+            });
+
+            let csvFile = new Blob([csv.join('\n')], { type: 'text/csv' });
+            saveAs(csvFile, 'availableassets.csv');
+        }
+
+        function exportToExcel() {
+            let html = '<table border="1" cellspacing="0" cellpadding="5"><thead><tr>';
+
+            // Get the headers
+            let headers = Array.from(document.querySelectorAll('thead th:not(:last-child)'))
+                .map(header => `<th>${header.innerText}</th>`).join('');
+            html += headers + '</tr></thead><tbody>';
+
+            // Get the rows
+            document.querySelectorAll('#assetTableBody tr').forEach(row => {
+                if (row.style.display !== 'none') {
+                    let cells = Array.from(row.querySelectorAll('td:not(:last-child)'))
+                        .map(cell => `<td>${cell.innerText}</td>`).join('');
+                    html += `<tr>${cells}</tr>`;
+                }
+            });
+
+            html += '</tbody></table>';
+
+            let excelFile = new Blob([html], { type: 'application/vnd.ms-excel' });
+            saveAs(excelFile, 'availableassets.xls');
+        }
+
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Load the logo image
+            const logo = new Image();
+            logo.src = '../images/canalsugar.png'; // Replace with the correct path to your logo
+
+            logo.onload = function () {
+                const imgWidth = 50; // Adjust the image width
+                const imgHeight = 30; // Adjust the image height
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const xOffset = (pageWidth - imgWidth) / 2; // Center the image
+
+                // Add the logo to the PDF
+                doc.addImage(logo, 'PNG', xOffset, 10, imgWidth, imgHeight); // Position and size of the logo
+
+                // Add the title below the logo
+                doc.setFontSize(18);
+                doc.setTextColor(22, 93, 10); // Dark green color
+                doc.text('CANAL SUGAR AVAILABLE ASSET REPORT', pageWidth / 2, imgHeight + 25, { align: 'center' }); // Center the title
+
+                // Add some space between the title and the table
+                doc.setFontSize(12);
+                doc.text('', 14, imgHeight + 35);
+
+                // Initialize the table data
+                let data = [];
+                let headers = [];
+
+                // Extract the headers
+                headers = Array.from(document.querySelectorAll('thead th:not(:last-child)'))
+                    .map(header => header.innerText);
+                data.push(headers);
+
+                // Extract visible rows
+                const rows = document.querySelectorAll('#assetTableBody tr');
+                rows.forEach(function (row) {
+                    if (row.style.display !== 'none') {
+                        let cols = Array.from(row.querySelectorAll('td:not(:last-child)'))
+                            .map(col => col.innerText);
+                        data.push(cols);
+                    }
+                });
+
+                // Use autoTable to add the table to the PDF
+                doc.autoTable({
+                    startY: imgHeight + 40, // Start the table after the title and logo
+                    head: [data[0]],
+                    body: data.slice(1),
+                    headStyles: {
+                        fillColor: [22, 93, 10] // Dark green color for header cells
+                    },
+                    styles: {
+                        fontSize: 10, // Adjust font size
+                    }
+                });
+
+                // Save the PDF
+                doc.save('available-assets_report.pdf');
+            };
+        }
+
+
+
+        const pdf_btn = document.querySelector('#toPDF');
+        pdf_btn.onclick = () => {
+            exportToPDF();
+        };
     </script>
 </body>
 

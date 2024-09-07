@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
 import com.example.canalsugar2.Models.Admin;
@@ -490,26 +492,34 @@ public class AdminController {
     }
 
     @PostMapping("/Login")
-    public RedirectView loginprocess(@RequestParam("email") String email, @RequestParam("pass") String pass,
+    public ModelAndView loginprocess(@RequestParam("email") String email, @RequestParam("pass") String pass,
             HttpSession session) {
-        Admin newUser = this.adminRepository.findByEmail(email);
-
-        if (newUser != null) {
-            Boolean PasswordsMatch = BCrypt.checkpw(pass, newUser.getPass());
-            if (PasswordsMatch) {
-                session.setAttribute("email", newUser.getEmail());
-                session.setAttribute("adminID", newUser.getAdminID());
-                session.setAttribute("Firstname", newUser.getFirstname());
-                session.setAttribute("Lastname", newUser.getLastname());
-                session.setAttribute("number", newUser.getNumber());
-                return new RedirectView("/admin/home");
-
-            } else {
-                return new RedirectView("/User/Login?error=incorrectPassword  " + email);
-            }
+    
+        ModelAndView modelAndView = new ModelAndView("login"); 
+    
+        if (email == null || email.isEmpty() || pass == null || pass.isEmpty()) {
+            modelAndView.addObject("error", "INVALID LOGIN CREDENTIALS");
+            return modelAndView; 
         }
-        return new RedirectView("/User/Login?error=userNotFound  " + email);
+    
+        Admin newUser = this.adminRepository.findByEmail(email);
+    
+        if (newUser != null && BCrypt.checkpw(pass, newUser.getPass())) {
+            session.setAttribute("email", newUser.getEmail());
+            session.setAttribute("adminID", newUser.getAdminID());
+            session.setAttribute("Firstname", newUser.getFirstname());
+            session.setAttribute("Lastname", newUser.getLastname());
+            session.setAttribute("number", newUser.getNumber());
+    
+            return new ModelAndView("redirect:/admin/home");
+        } else {
+            modelAndView.addObject("error", "INVALID LOGIN CREDENTIALS");
+            return modelAndView;
+        }
     }
+    
+    
+
 
     
 

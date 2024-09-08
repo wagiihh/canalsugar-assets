@@ -303,6 +303,7 @@
                     <th>LastName</th>
                     <th>Email</th>
                     <th>NUMBER</th>
+                    <th>EMPLOYEE ID</th>
                     <th>Department</th>
                     <th>ACTIONS</th>
                 </tr>
@@ -314,6 +315,7 @@
                     <td th:text="${user.lastname}"></td>
                     <td th:text="${user.email}"></td>
                     <td th:text="${user.number}"></td>
+                    <td th:text="${user.employeeid}"></td>
                     <td th:text="${user.department.Departmentname}" class="departmentCell"></td>
                     <td>
                         <a id="edit" th:href="@{'edit/' + ${user.UserID}}">EDIT</a> ||
@@ -347,11 +349,13 @@
                 const lastName = row.cells[2].textContent.toLowerCase();
                 const email = row.cells[3].textContent.toLowerCase();
                 const number = row.cells[4].textContent.toLowerCase();
+                const empid=row.cells[5].textContent.toLowerCase();
 
                 // Check if the row matches the search term
                 const matchesSearch = firstName.includes(searchTerm) ||
                     lastName.includes(searchTerm) ||
                     email.includes(searchTerm) ||
+                    empid.includes(searchTerm) ||
                     number.includes(searchTerm);
 
                 // Check if the row matches the selected department

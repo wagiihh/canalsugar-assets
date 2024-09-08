@@ -47,6 +47,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Asset Type</th>
                         <th>Asset Name</th>
                         <th>Asset Model</th>
                         <th>Asset Serial</th>
@@ -54,6 +55,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="asset : ${last4Assets}">
+                        <td th:text="${asset.assetType.name}"></td>
                         <td th:text="${asset.assetname}"></td>
                         <td th:text="${asset.assetmodel}"></td>
                         <td th:text="${asset.assetserial}"></td>

@@ -192,7 +192,7 @@ public class AdminController {
 
     @PostMapping("adduser")
     public ModelAndView processSignupForm(@Valid @ModelAttribute("newUser") User newUser, BindingResult result) {
-        ModelAndView SignupModel = new ModelAndView("adduser.html");
+        ModelAndView SignupModel = new ModelAndView("signup");
         ModelAndView refresh = new ModelAndView("CSHOME.html");
 
         if (result.hasErrors()) {
@@ -205,8 +205,12 @@ public class AdminController {
         }
     
         User existingUser = userRepository.findByEmail(newUser.getEmail());
+        User existingguser=userRepository.findByEmployeeid(newUser.getEmployeeid());
 
-        if (existingUser != null) {
+        if (existingUser != null||existingguser!=null) {
+            SignupModel.addObject("error", "USER ALREADY EXISTS , CHECK THE EMAIL OR EMPLOYEE ID");
+            List<Department> departments = departmentRepository.findAll();
+            SignupModel.addObject("departments", departments);
             return SignupModel;
         } else {
             User user = newUser.getUser();

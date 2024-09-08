@@ -158,6 +158,13 @@ body {
                             </div>
     
                         </div>
+
+                        <div class="form-group">
+                            <label for="email">Employee ID:</label>
+                            <input type="text" class="form-control" id="employeeid" th:field="*{employeeid}" placeholder="EMPLOYEE ID" >
+                            <span th:if="${#fields.hasErrors('employeeid')}" th:errors="*{employeeid}" class="error-message"></span>
+                            <span id="error-email" class="error-message"> </span>
+                        </div>
     
                         <div class="form-group">
                             <label for="email">Email:</label>

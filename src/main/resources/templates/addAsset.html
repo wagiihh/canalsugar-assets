@@ -61,6 +61,10 @@
                         <span th:if="${#fields.hasErrors('assetType.assettypeid')}" th:errors="*{assetType.assettypeid}" class="error-message"></span>
                     </div>
                     
+                    <div th:if="${error}" class="error-message" style="color: red;">
+                        <p th:text="${error}"></p>
+                    </div>
+                    
                     <button id="submit" type="submit" class="btn btn-primary" name="submit">ADD ASSET</button>
                 </form>
                 

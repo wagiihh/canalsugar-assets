@@ -124,7 +124,6 @@ public class AssetsController {
     
     @PostMapping("/addAsset")
     public ModelAndView processAssetForm(@Valid @ModelAttribute("newAsset") Asset newAsset, BindingResult result) {
-        System.out.println("ALOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
         if (result.hasErrors()) {
             ModelAndView mav = new ModelAndView("addAsset");
             mav.addObject("assetTypes", assetTypeRepository.findAll());
@@ -137,7 +136,7 @@ public class AssetsController {
         if (existingAsset != null) {
             ModelAndView mav = new ModelAndView("addAsset");
             mav.addObject("assetTypes", assetTypeRepository.findAll());
-            mav.addObject("errorMessage", "Asset already exists with this Serial Number. Please review the details or choose a different Serial Number.");
+            mav.addObject("error", "Asset already exists with this Serial Number. Please review the details or choose a different Serial Number.");
             return mav;
         }
         
@@ -239,7 +238,6 @@ public RedirectView deleteAsset(@PathVariable Integer assetid,HttpSession sessio
             return new RedirectView("/error");
         }
 
-        System.out.println("ANA HENA FEL DELETEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
     Asset asset = this.assetRepository.findByAssetid(assetid);
     this.assetRepository.delete(asset);
 

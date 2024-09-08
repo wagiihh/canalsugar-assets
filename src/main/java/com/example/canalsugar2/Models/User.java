@@ -36,6 +36,10 @@ public class User {
     @NotBlank(message = "Last Name is required")
     @Column(name = "lastname")
     private String lastname;
+
+    @NotBlank(message = "Employee ID is required")
+    @Column(name = "employeeid")
+    private String employeeid;
     
     @NotBlank(message = "Number is required")
     @Column(name = "number")
@@ -48,14 +52,16 @@ public class User {
     private Department department;
     
 
+
     public User() {
     }
 
-    public User(int userID, String email, String firstname, String lastname, String number, Department department) {
+    public User(int userID, String email, String firstname, String lastname, String employeeid, String number, Department department) {
         this.userID = userID;
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.employeeid = employeeid;
         this.number = number;
         this.department = department;
     }
@@ -92,6 +98,20 @@ public class User {
         this.lastname = lastname;
     }
 
+    public User getUser()
+    {
+        return this;
+    }
+
+
+    public String getEmployeeid() {
+        return this.employeeid;
+    }
+
+    public void setEmployeeid(String employeeid) {
+        this.employeeid = employeeid;
+    }
+
     public String getNumber() {
         return this.number;
     }
@@ -104,28 +124,12 @@ public class User {
         return this.department;
     }
 
-    public Integer getDepartmentId() {
-        return this.department.getDepartmentID();
-    }
-
-    public void setDepartmentId(Integer departmentId) {
-        if (this.department == null) {
-            this.department = new Department();
-        }
-        this.department.setDepartmentID(departmentId);
-    }
-
     public void setDepartment(Department department) {
         this.department = department;
     }
 
     public User userID(int userID) {
         setUserID(userID);
-        return this;
-    }
-
-    public User getUser()
-    {
         return this;
     }
 
@@ -141,6 +145,11 @@ public class User {
 
     public User lastname(String lastname) {
         setLastname(lastname);
+        return this;
+    }
+
+    public User employeeid(String employeeid) {
+        setEmployeeid(employeeid);
         return this;
     }
 
@@ -162,12 +171,12 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return userID == user.userID && Objects.equals(email, user.email) && Objects.equals(firstname, user.firstname) && Objects.equals(lastname, user.lastname) && Objects.equals(number, user.number) && Objects.equals(department, user.department);
+        return userID == user.userID && Objects.equals(email, user.email) && Objects.equals(firstname, user.firstname) && Objects.equals(lastname, user.lastname) && Objects.equals(employeeid, user.employeeid) && Objects.equals(number, user.number) && Objects.equals(department, user.department);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userID, email, firstname, lastname, number, department);
+        return Objects.hash(userID, email, firstname, lastname, employeeid, number, department);
     }
 
     @Override
@@ -177,9 +186,11 @@ public class User {
             ", email='" + getEmail() + "'" +
             ", firstname='" + getFirstname() + "'" +
             ", lastname='" + getLastname() + "'" +
+            ", employeeid='" + getEmployeeid() + "'" +
             ", number='" + getNumber() + "'" +
             ", department='" + getDepartment() + "'" +
             "}";
     }
+
     
 }

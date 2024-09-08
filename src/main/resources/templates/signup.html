@@ -236,12 +236,24 @@
                             <span id="error-email" class="error-message"> </span>
                         </div>
 
+                        
+                        <div class="form-group">
+                            <label for="email">Employee ID:</label>
+                            <input type="text" class="form-control" id="employeeid" th:field="*{employeeid}" placeholder="EMPLOYEE ID" >
+                            <span th:if="${#fields.hasErrors('employeeid')}" th:errors="*{employeeid}" class="error-message"></span>
+                            <span id="error-email" class="error-message"> </span>
+                        </div>
+
                         <div class="form-group">
                             <label for="department">Department:</label>
                             <select class="form-control" id="department" th:field="*{department.departmentID}">
                                 <option th:each="dept : ${departments}" th:value="${dept.departmentID}" th:text="${dept.Departmentname}"></option>
                             </select>
                             <span th:if="${#fields.hasErrors('department.departmentID')}" th:errors="*{department.departmentID}" class="error-message"></span>
+                        </div>
+
+                        <div th:if="${error}" class="error-message" style="color: red;">
+                            <p th:text="${error}"></p>
                         </div>
 
                         <button id="submit" type="submit" class="btn btn-primary" name="submit">Register Now</button>

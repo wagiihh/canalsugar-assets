@@ -1,4 +1,17 @@
-FROM openjdk:21-jdk-alpine
-ARG JAR_FILE=target/*.jar
-COPY ./target/canalsugar2-0.0.1.jar app.jar
+# FROM openjdk:21-jdk-alpine
+# ARG JAR_FILE=target/*.jar
+# COPY ./target/canalsugar2-0.0.1.jar app.jar
+# ENTRYPOINT ["java","-jar","/app.jar"]
+
+
+FROM maven:3.9-eclipse-temurin-21 AS builder
+VOLUME /tmp
+COPY target/*.jar app.jar
+COPY src src
+WORKDIR /app
+COPY  pom.xml .
+
+# Runtime Stage
+FROM builder AS runtime
+WORKDIR /app
 ENTRYPOINT ["java","-jar","/app.jar"]
